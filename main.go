@@ -1,17 +1,15 @@
 package main
 
 import (
-	//"image"
 	"log"
-	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 const (
-	ScreenWidth = 736
-	ScreenHeight = 414
+	ScreenWidth = 300
+	ScreenHeight = 300
 	WindowWidth = 1080
 	WindowHeight = 720
 	minXCoordinate = 20
@@ -23,7 +21,7 @@ const (
 type Tank struct {
 	width, height float64
 	positionX, positionY float64
-	rotation, moveSpeed, rotationSpeed float64
+	rotation, moveSpeed float64
 	image *ebiten.Image
 }
 
@@ -45,43 +43,8 @@ func init() {
 
 func (g *Game) Update() error {
 	g.count++
+	UpdatePlayer(g)
 
-	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		g.player.rotation = 0
-		g.player.positionY -= 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		g.player.rotation = math.Pi
-		g.player.positionY += 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		g.player.rotation = 3 * math.Pi / 2
-		g.player.positionX -= 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		g.player.rotation = math.Pi / 2
-		g.player.positionX += 1
-	}
-
-	//if ebiten.IsKeyPressed(ebiten.KeyW) {
-		//g.player.positionY -= 1
-	//	deltaY := math.Cos(g.player.rotation) * g.player.moveSpeed
-	//	deltaX := -math.Sin(g.player.rotation) * g.player.moveSpeed
-	//	g.player.positionY -= deltaY
-	//	g.player.positionX -= deltaX
-	//}
-	//if ebiten.IsKeyPressed(ebiten.KeyS) {
-	//	deltaY := math.Cos(g.player.rotation) * g.player.moveSpeed
-	//	deltaX := -math.Sin(g.player.rotation) * g.player.moveSpeed
-	//	g.player.positionY += deltaY
-	//	g.player.positionX += deltaX
-	//}
-	//if ebiten.IsKeyPressed(ebiten.KeyA) {
-	//	g.player.rotation -= g.player.rotationSpeed
-	//}
-	//if ebiten.IsKeyPressed(ebiten.KeyD) {
-	//	g.player.rotation += g.player.rotationSpeed
-	//}
 	return nil
 }
 
@@ -105,7 +68,7 @@ func main() {
 		width: 30, height: 57,
 		positionX: 100, positionY: 100,
 		rotation: 0, moveSpeed: 1.2,
-		rotationSpeed: 0.1, image: img}
+		image: img}
 	ebiten.SetWindowSize(WindowWidth, WindowHeight)
 	ebiten.SetWindowTitle("Hello, Gamer!")
 	if err := ebiten.RunGame(game); err != nil {
