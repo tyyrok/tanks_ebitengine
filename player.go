@@ -16,9 +16,9 @@ func DrawPlayer(p *Tank, screen *ebiten.Image) {
 	baseOffsetY := float64(p.image.Bounds().Dy()) / 2
 	op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
 	op.GeoM.Rotate(p.rotation)
-	op.GeoM.Translate(p.positionX+baseOffsetX, p.positionY+baseOffsetY)
+	op.GeoM.Translate(p.posX+baseOffsetX, p.posY+baseOffsetY)
 	screen.DrawImage(p.image, op)
-	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), p.positionX, p.positionY)
+	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), p.posX, p.posY)
 	ebitenutil.DebugPrint(screen, msg)
 	msg = "\nW - go up, S - go down, A - go left, D - go right"
 	ebitenutil.DebugPrint(screen, msg)
@@ -31,7 +31,7 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 		}
 		op := &ebiten.DrawImageOptions{}
 		if shot.isCollided {
-			op.GeoM.Translate(shot.positionX - shot.explosion1SpriteWidth / 2, shot.positionY - shot.explosion1SpriteHeight / 2)
+			op.GeoM.Translate(shot.posX - shot.explosion1SpriteWidth / 2, shot.posY - shot.explosion1SpriteHeight / 2)
 			sx, sy := shot.explosionFrame * int(shot.explosion1SpriteWidth), 0
 			screen.DrawImage(shot.explosion1.SubImage(image.Rect(sx, sy, sx+int(shot.explosion1SpriteWidth), sy+int(shot.explosion1SpriteHeight))).(*ebiten.Image), op)
 			if shot.explosionFrame == shot.explosionNumSprites - 1 {
@@ -47,7 +47,7 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 			op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
 			op.GeoM.Rotate(shot.rotation)
 			op.GeoM.Scale(0.4, 0.4)
-			op.GeoM.Translate(shot.positionX, shot.positionY)
+			op.GeoM.Translate(shot.posX, shot.posY)
 			screen.DrawImage(shot.image, op)
 		}
 		msg := fmt.Sprintf("\n\n\n\n\nprojectiles: %d", len(g.projectiles))
@@ -62,32 +62,48 @@ func UpdatePlayer(g *Game) {
 		}
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
+		g.player.prevPosX = g.player.posX
+		g.player.prevPosY = g.player.posY
+		g.player.prevRotation = g.player.rotation
 		g.player.rotation = 0
-		g.player.positionY -= 1
+		g.player.posY -= 1
+		UpdateCollisions(g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
+		g.player.prevPosX = g.player.posX
+		g.player.prevPosY = g.player.posY
+		g.player.prevRotation = g.player.rotation
 		g.player.rotation = math.Pi
-		g.player.positionY += 1
+		g.player.posY += 1
+		UpdateCollisions(g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
+		g.player.prevPosX = g.player.posX
+		g.player.prevPosY = g.player.posY
+		g.player.prevRotation = g.player.rotation
 		g.player.rotation = 3 * math.Pi / 2
-		g.player.positionX -= 1
+		g.player.posX -= 1
+		UpdateCollisions(g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
+		g.player.prevPosX = g.player.posX
+		g.player.prevPosY = g.player.posY
+		g.player.prevRotation = g.player.rotation
 		g.player.rotation = math.Pi / 2
-		g.player.positionX += 1
+		g.player.posX += 1
+		UpdateCollisions(g)
 	}
-	if g.player.positionX <= minXCoordinate {
-		g.player.positionX = minXCoordinate
+	if g.player.posX <= minXCoordinate {
+		g.player.posX = minXCoordinate
 	}
-	if g.player.positionX >= maxXCoordinate - g.player.width - (g.player.height - g.player.width) / 2 {
-		g.player.positionX = maxXCoordinate - g.player.width - (g.player.height - g.player.width) / 2
+	if g.player.posX >= maxXCoordinate - g.player.width - (g.player.height - g.player.width) / 2 {
+		g.player.posX = maxXCoordinate - g.player.width - (g.player.height - g.player.width) / 2
 	}
-	if g.player.positionY <= minYCoordinate {
-		g.player.positionY = minYCoordinate
+	if g.player.posY <= minYCoordinate {
+		g.player.posY = minYCoordinate
 	}
-	if g.player.positionY >= maxYCoordinate - g.player.height {
-		g.player.positionY = maxYCoordinate - g.player.height
+	if g.player.posY >= maxYCoordinate - g.player.height {
+		g.player.posY = maxYCoordinate - g.player.height
 	}
 }
 
@@ -100,8 +116,8 @@ func UpdateProjectiles(g *Game) {
 		if !shot.isCollided {
 			deltaY := math.Cos(shot.rotation) * shot.moveSpeed
 			deltaX := -math.Sin(shot.rotation) * shot.moveSpeed
-			g.projectiles[i].positionX -= deltaX
-			g.projectiles[i].positionY -= deltaY
+			g.projectiles[i].posX -= deltaX
+			g.projectiles[i].posY -= deltaY
 			if checkProjectileCollision(&shot) {
 				g.projectiles[i].isCollided = true
 			}
@@ -128,8 +144,8 @@ func addProjectile(g *Game) {
 		height: ligthProjectileHeight,
 		rotation: g.player.rotation,
 		moveSpeed: g.player.moveSpeed + 1,
-		positionX: g.player.positionX+deltaX,
-		positionY: g.player.positionY+deltaY,
+		posX: g.player.posX+deltaX,
+		posY: g.player.posY+deltaY,
 		explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
 		explosionNumSprites: 8,
 		explosionFrame: 0,
@@ -142,8 +158,18 @@ func addProjectile(g *Game) {
 }
 
 func checkProjectileCollision(p *Projectile) bool {
-	if p.positionX <= minXCoordinate || p.positionY <= minYCoordinate || p.positionX >= maxXCoordinate - 25 || p.positionY >= maxYCoordinate - 25 {
+	if p.posX <= minXCoordinate || p.posY <= minYCoordinate || p.posX >= maxXCoordinate - 25 || p.posY >= maxYCoordinate - 25 {
 		return  true
 	}
 	return false
+}
+
+func UpdateCollisions(g *Game) {
+	for _, block := range g.blocks {
+		if g.player.checkBlockCollision(&block) {
+			g.player.posX = g.player.prevPosX
+			g.player.posY = g.player.prevPosY
+			g.player.rotation = g.player.prevRotation
+		}
+	}
 }

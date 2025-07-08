@@ -41,9 +41,10 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	game := &Game{}
 	loadResources(game)
+	initLevel(game)
 	game.player = Tank{
 		width: 30, height: 57,
-		positionX: 100, positionY: 100,
+		posX: 110, posY: 140,
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,
 		image: game.resources.playerImage}
