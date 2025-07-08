@@ -37,4 +37,19 @@ type Game struct{
 	player Tank
 	tanks []Tank
 	projectiles []Projectile
+	blocks []Block
+	resources Resource
+}
+
+type Block struct {
+	posX, posY int
+	image *ebiten.Image
+}
+
+type Resource struct {
+	background *ebiten.Image
+	blockImage *ebiten.Image
+	playerImage *ebiten.Image
+	projectileImage *ebiten.Image
+	projectileExplImage *ebiten.Image
 }

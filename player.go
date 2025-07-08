@@ -135,8 +135,8 @@ func addProjectile(g *Game) {
 		explosionFrame: 0,
 		isCollided: false,
 		isActive: true,
-		image: projImg,
-		explosion1: explositionLight,
+		image: g.resources.projectileImage,
+		explosion1: g.resources.projectileExplImage,
 	})
 	g.player.lastShot = g.count
 }
