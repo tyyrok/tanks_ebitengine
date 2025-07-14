@@ -11,9 +11,9 @@ const (
 	ScreenHeight = 300
 	WindowWidth = 1080
 	WindowHeight = 720
-	minXCoordinate = 16
-	minYCoordinate = 16
-	maxXCoordinate = 295
+	minXCoordinate = 0
+	minYCoordinate = 0
+	maxXCoordinate = 300
 	maxYCoordinate = 300
 	ligthProjectileWidth = 12
 	ligthProjectileHeight = 25

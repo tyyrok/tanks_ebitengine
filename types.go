@@ -1,8 +1,7 @@
 package main
 
 import (
-	"log"
-	//"math"
+	//"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -61,7 +60,7 @@ type Tank struct {
 func (t *Tank) checkBlockCollision(b *Block) bool {
 	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
 	
-	log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
+	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
 	if b.posX >= tRotatedX && b.posX <= (tRotatedX + tWidth) {
 		if b.posY >= tRotatedY && b.posY <= (tRotatedY + tHeight) {
 			return true

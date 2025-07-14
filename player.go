@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"fmt"
 	"image"
 	"math"
@@ -79,7 +80,6 @@ func UpdatePlayer(g *Game) {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		g.player.prevPosX = g.player.posX
-		g.player.prevPosY = g.player.posY
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = 3 * math.Pi / 2
 		g.player.posX -= 1
@@ -87,25 +87,23 @@ func UpdatePlayer(g *Game) {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		g.player.prevPosX = g.player.posX
-		g.player.prevPosY = g.player.posY
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = math.Pi / 2
 		g.player.posX += 1
 		UpdateCollisions(g)
 	}
 	tRotatedX, tRotatedY, tWidth, tHeight  := getRotatedCoords(&g.player)
-
-	if tRotatedX<= minXCoordinate {
+	log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f", tRotatedX, tRotatedY, tWidth, tHeight)
+	if tRotatedX <= minXCoordinate {
 		g.player.posX = g.player.prevPosX
 	}
-	if tRotatedX >= maxXCoordinate - tWidth - (tHeight - tWidth) / 2 {
+	if tRotatedX >= maxXCoordinate - tWidth {
 		g.player.posX = g.player.prevPosX
 	}
 	if tRotatedY <= minYCoordinate {
 		g.player.posY = g.player.prevPosY
-
 	}
-	if tRotatedX >= maxYCoordinate - tHeight {
+	if tRotatedY >= maxYCoordinate - tHeight {
 		g.player.posY = g.player.prevPosY
 	}
 }
