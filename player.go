@@ -38,7 +38,7 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 				g.projectiles[i].isActive = false
 				continue
 			}
-			if g.count % 20 == 0 {
+			if g.count % 8 == 0 {
 				g.projectiles[i].explosionFrame += 1
 			}
 		} else {
@@ -93,17 +93,20 @@ func UpdatePlayer(g *Game) {
 		g.player.posX += 1
 		UpdateCollisions(g)
 	}
-	if g.player.posX <= minXCoordinate {
-		g.player.posX = minXCoordinate
+	tRotatedX, tRotatedY, tWidth, tHeight  := getRotatedCoords(&g.player)
+
+	if tRotatedX<= minXCoordinate {
+		g.player.posX = g.player.prevPosX
 	}
-	if g.player.posX >= maxXCoordinate - g.player.width - (g.player.height - g.player.width) / 2 {
-		g.player.posX = maxXCoordinate - g.player.width - (g.player.height - g.player.width) / 2
+	if tRotatedX >= maxXCoordinate - tWidth - (tHeight - tWidth) / 2 {
+		g.player.posX = g.player.prevPosX
 	}
-	if g.player.posY <= minYCoordinate {
-		g.player.posY = minYCoordinate
+	if tRotatedY <= minYCoordinate {
+		g.player.posY = g.player.prevPosY
+
 	}
-	if g.player.posY >= maxYCoordinate - g.player.height {
-		g.player.posY = maxYCoordinate - g.player.height
+	if tRotatedX >= maxYCoordinate - tHeight {
+		g.player.posY = g.player.prevPosY
 	}
 }
 

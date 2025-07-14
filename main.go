@@ -11,7 +11,7 @@ const (
 	ScreenHeight = 300
 	WindowWidth = 1080
 	WindowHeight = 720
-	minXCoordinate = 24
+	minXCoordinate = 16
 	minYCoordinate = 16
 	maxXCoordinate = 295
 	maxYCoordinate = 300
@@ -43,8 +43,8 @@ func main() {
 	loadResources(game)
 	initLevel(game)
 	game.player = Tank{
-		width: 30, height: 57,
-		posX: 110, posY: 140,
+		width: 22, height: 42,
+		posX: 50, posY: 100,
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,
 		image: game.resources.playerImage}

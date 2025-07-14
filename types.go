@@ -1,26 +1,19 @@
 package main
 
 import (
+	"log"
+	//"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
-
-type Tank struct {
-	width, height float64
-	positionX, positionY float64
-	rotation, moveSpeed float64
-	image *ebiten.Image
-	reloadSpeed int
-	lastShot int
-}
 
 type Projectile struct {
 	width float64
 	height float64
 	rotation float64
 	moveSpeed float64
-	positionX float64
-	positionY float64
+	posX float64
+	posY float64
 	image *ebiten.Image
 	explosion1 *ebiten.Image
 	explosion1SpriteWidth float64
@@ -42,7 +35,8 @@ type Game struct{
 }
 
 type Block struct {
-	posX, posY int
+	posX, posY float64
+	width, height float64
 	image *ebiten.Image
 }
 
@@ -52,4 +46,37 @@ type Resource struct {
 	playerImage *ebiten.Image
 	projectileImage *ebiten.Image
 	projectileExplImage *ebiten.Image
+}
+
+type Tank struct {
+	width, height float64
+	posX, posY float64
+	prevPosX, prevPosY float64
+	rotation, prevRotation, moveSpeed float64
+	image *ebiten.Image
+	reloadSpeed int
+	lastShot int
+}
+
+func (t *Tank) checkBlockCollision(b *Block) bool {
+	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
+	
+	log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
+	if b.posX >= tRotatedX && b.posX <= (tRotatedX + tWidth) {
+		if b.posY >= tRotatedY && b.posY <= (tRotatedY + tHeight) {
+			return true
+		}
+		if (b.posY + b.height) >= tRotatedY && (b.posY + b.height) <= (tRotatedY + tHeight) {
+			return  true
+		}
+	}
+	if (b.posX + b.width) >= tRotatedX && (b.posX + b.width) <= (tRotatedX + tWidth) {
+		if b.posY >= tRotatedY && b.posY <= (tRotatedY + tHeight) {
+			return true
+		}
+		if (b.posY + b.height) >= tRotatedY && (b.posY + b.height) <= (tRotatedY + tHeight) {
+			return  true
+		}
+	}
+	return false
 }
