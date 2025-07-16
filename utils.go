@@ -54,20 +54,36 @@ func getRotatedCoords(t *Tank) (float64, float64, float64, float64) {
 	return tRotatedX, tRotatedY, tWidth, tHeight
 }
 
-func getTurretOffset(t *Tank) (float64, float64) {
+func getTurretOffset(t *Tank, is_rollback bool) (float64, float64) {
 	var turretOffsetX, turretOffsetY float64
-	if t.rotation == 0 {
-		turretOffsetX = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
-		turretOffsetY = 0
-	} else if math.Round(t.rotation) == math.Round(math.Pi) {
-		turretOffsetX = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
-		turretOffsetY = 0
-	} else if math.Round(t.rotation) == math.Round(3*math.Pi/2) {
-		turretOffsetX = 0
-		turretOffsetY = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+	if is_rollback {
+		if t.rotation == 0 {
+			turretOffsetX = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+			turretOffsetY = float64(t.fireRollbackOffset)
+		} else if math.Round(t.rotation) == math.Round(math.Pi) {
+			turretOffsetX = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+			turretOffsetY = -float64(t.fireRollbackOffset)
+		} else if math.Round(t.rotation) == math.Round(3*math.Pi/2) {
+			turretOffsetX = float64(t.fireRollbackOffset)
+			turretOffsetY = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+		} else {
+			turretOffsetX = -float64(t.fireRollbackOffset)
+			turretOffsetY = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+		}
 	} else {
-		turretOffsetX = 0
-		turretOffsetY = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+		if t.rotation == 0 {
+			turretOffsetX = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+			turretOffsetY = 0
+		} else if math.Round(t.rotation) == math.Round(math.Pi) {
+			turretOffsetX = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+			turretOffsetY = 0
+		} else if math.Round(t.rotation) == math.Round(3*math.Pi/2) {
+			turretOffsetX = 0
+			turretOffsetY = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+		} else {
+			turretOffsetX = 0
+			turretOffsetY = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+		}
 	}
 	return turretOffsetX, turretOffsetY
 }

@@ -30,7 +30,7 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	DrawLevel(g, screen)
-	DrawPlayer(&g.player, screen)
+	DrawPlayer(&g.player, screen, g.count)
 	DrawProjectiles(g, screen)
 }
 
@@ -48,7 +48,8 @@ func main() {
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,
 		hullImage: game.resources.playerHullImage,
-		turretImage: game.resources.playerTurretImage,}
+		turretImage: game.resources.playerTurretImage,
+		fireRollbackOffset: 2,}
 	ebiten.SetWindowSize(WindowWidth, WindowHeight)
 	ebiten.SetWindowTitle("Hello, Gamer!")
 	if err := ebiten.RunGame(game); err != nil {

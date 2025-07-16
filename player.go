@@ -10,8 +10,9 @@ import (
 )
 
 
-func DrawPlayer(p *Tank, screen *ebiten.Image) {
+func DrawPlayer(p *Tank, screen *ebiten.Image, count int) {
 	op := &ebiten.DrawImageOptions{}
+	var turretOffsetX, turretOffsetY float64
 	// Draw player hull
 	baseOffsetX := float64(p.hullImage.Bounds().Dx()) / 2
 	baseOffsetY := float64(p.hullImage.Bounds().Dy()) / 2
@@ -20,7 +21,12 @@ func DrawPlayer(p *Tank, screen *ebiten.Image) {
 	op.GeoM.Translate(p.posX+baseOffsetX, p.posY+baseOffsetY)
 	screen.DrawImage(p.hullImage, op)
 	// Draw player turret
-	turretOffsetX, turretOffsetY := getTurretOffset(p)
+	if count - p.lastShot < 5 {
+		turretOffsetX, turretOffsetY = getTurretOffset(p, true)
+	} else {
+		turretOffsetX, turretOffsetY = getTurretOffset(p, false)
+	}
+
 	op.GeoM.Translate(turretOffsetX, turretOffsetY)
 	screen.DrawImage(p.turretImage, op)
 

@@ -58,6 +58,7 @@ type Tank struct {
 	turretImage *ebiten.Image
 	reloadSpeed int
 	lastShot int
+	fireRollbackOffset int
 }
 
 func (t *Tank) checkBlockCollision(b *Block) bool {
