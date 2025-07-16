@@ -42,7 +42,8 @@ type Block struct {
 type Resource struct {
 	background *ebiten.Image
 	blockImage *ebiten.Image
-	playerImage *ebiten.Image
+	playerHullImage *ebiten.Image
+	playerTurretImage *ebiten.Image
 	projectileImage *ebiten.Image
 	projectileExplImage *ebiten.Image
 }
@@ -52,7 +53,8 @@ type Tank struct {
 	posX, posY float64
 	prevPosX, prevPosY float64
 	rotation, prevRotation, moveSpeed float64
-	image *ebiten.Image
+	hullImage *ebiten.Image
+	turretImage *ebiten.Image
 	reloadSpeed int
 	lastShot int
 }

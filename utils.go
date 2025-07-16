@@ -26,7 +26,11 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	r.playerImage, _, err = ebitenutil.NewImageFromFile("resources/tankAtiny2.png")
+	r.playerHullImage, _, err = ebitenutil.NewImageFromFile("resources/hull_new_mini.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.playerTurretImage, _, err = ebitenutil.NewImageFromFile("resources/turret_new_mini.png")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,4 +52,22 @@ func getRotatedCoords(t *Tank) (float64, float64, float64, float64) {
 		tRotatedY = (t.posY + t.height / 2) - (t.width / 2)
 	}
 	return tRotatedX, tRotatedY, tWidth, tHeight
+}
+
+func getTurretOffset(t *Tank) (float64, float64) {
+	var turretOffsetX, turretOffsetY float64
+	if t.rotation == 0 {
+		turretOffsetX = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+		turretOffsetY = 0
+	} else if math.Round(t.rotation) == math.Round(math.Pi) {
+		turretOffsetX = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+		turretOffsetY = 0
+	} else if math.Round(t.rotation) == math.Round(3*math.Pi/2) {
+		turretOffsetX = 0
+		turretOffsetY = - (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+	} else {
+		turretOffsetX = 0
+		turretOffsetY = (t.width / 2 - float64(t.turretImage.Bounds().Dx()) / 2)
+	}
+	return turretOffsetX, turretOffsetY
 }

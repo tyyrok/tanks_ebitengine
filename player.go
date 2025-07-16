@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	//"log"
 	"fmt"
 	"image"
 	"math"
@@ -13,12 +13,15 @@ import (
 
 func DrawPlayer(p *Tank, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	baseOffsetX := float64(p.image.Bounds().Dx()) / 2
-	baseOffsetY := float64(p.image.Bounds().Dy()) / 2
+	baseOffsetX := float64(p.hullImage.Bounds().Dx()) / 2
+	baseOffsetY := float64(p.hullImage.Bounds().Dy()) / 2
 	op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
 	op.GeoM.Rotate(p.rotation)
 	op.GeoM.Translate(p.posX+baseOffsetX, p.posY+baseOffsetY)
-	screen.DrawImage(p.image, op)
+	screen.DrawImage(p.hullImage, op)
+	turretOffsetX, turretOffsetY := getTurretOffset(p)
+	op.GeoM.Translate(turretOffsetX, turretOffsetY)
+	screen.DrawImage(p.turretImage, op)
 	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), p.posX, p.posY)
 	ebitenutil.DebugPrint(screen, msg)
 	msg = "\nW - go up, S - go down, A - go left, D - go right"
@@ -47,7 +50,7 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 			baseOffsetY := float64(shot.image.Bounds().Dy()) / 2
 			op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
 			op.GeoM.Rotate(shot.rotation)
-			op.GeoM.Scale(0.4, 0.4)
+			op.GeoM.Scale(0.2, 0.2)
 			op.GeoM.Translate(shot.posX, shot.posY)
 			screen.DrawImage(shot.image, op)
 		}
@@ -93,7 +96,7 @@ func UpdatePlayer(g *Game) {
 		UpdateCollisions(g)
 	}
 	tRotatedX, tRotatedY, tWidth, tHeight  := getRotatedCoords(&g.player)
-	log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f", tRotatedX, tRotatedY, tWidth, tHeight)
+	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f", tRotatedX, tRotatedY, tWidth, tHeight)
 	if tRotatedX <= minXCoordinate {
 		g.player.posX = g.player.prevPosX
 	}
@@ -130,8 +133,8 @@ func UpdateProjectiles(g *Game) {
 
 func addProjectile(g *Game) {
 	// Calculate offset for spawning a projectile
-	posOffsetX := float64(g.player.image.Bounds().Dx()) / 2
-	posOffsetY := float64(g.player.image.Bounds().Dy()) / 2
+	posOffsetX := float64(g.player.hullImage.Bounds().Dx()) / 2
+	posOffsetY := float64(g.player.hullImage.Bounds().Dy()) / 2
 	deltaX := posOffsetX * math.Abs(math.Cos(g.player.rotation)) + posOffsetX * math.Abs(math.Sin(g.player.rotation))
 	deltaY := posOffsetY * math.Abs(math.Cos(g.player.rotation)) + posOffsetY * math.Abs(math.Sin(g.player.rotation))
 	if g.player.rotation == 0 || g.player.rotation == math.Pi {
