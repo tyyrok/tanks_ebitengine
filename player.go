@@ -4,6 +4,7 @@ import (
 	//"log"
 	"fmt"
 	"image"
+	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -13,15 +14,18 @@ import (
 
 func DrawPlayer(p *Tank, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
+	// Draw player hull
 	baseOffsetX := float64(p.hullImage.Bounds().Dx()) / 2
 	baseOffsetY := float64(p.hullImage.Bounds().Dy()) / 2
 	op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
 	op.GeoM.Rotate(p.rotation)
 	op.GeoM.Translate(p.posX+baseOffsetX, p.posY+baseOffsetY)
 	screen.DrawImage(p.hullImage, op)
+	// Draw player turret
 	turretOffsetX, turretOffsetY := getTurretOffset(p)
 	op.GeoM.Translate(turretOffsetX, turretOffsetY)
 	screen.DrawImage(p.turretImage, op)
+
 	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), p.posX, p.posY)
 	ebitenutil.DebugPrint(screen, msg)
 	msg = "\nW - go up, S - go down, A - go left, D - go right"
@@ -83,6 +87,7 @@ func UpdatePlayer(g *Game) {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		g.player.prevPosX = g.player.posX
+		g.player.prevPosY = g.player.posY
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = 3 * math.Pi / 2
 		g.player.posX -= 1
@@ -90,6 +95,7 @@ func UpdatePlayer(g *Game) {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		g.player.prevPosX = g.player.posX
+		g.player.prevPosY = g.player.posY
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = math.Pi / 2
 		g.player.posX += 1
