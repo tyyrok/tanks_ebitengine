@@ -1,10 +1,8 @@
 package main
 
 import (
-	//"log"
 	"fmt"
 	"image"
-	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -46,7 +44,7 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 				g.projectiles[i].isActive = false
 				continue
 			}
-			if g.count % 8 == 0 {
+			if g.count % shot.explosionSpeed == 0 {
 				g.projectiles[i].explosionFrame += 1
 			}
 		} else {
@@ -154,8 +152,8 @@ func addProjectile(g *Game) {
 		height: ligthProjectileHeight,
 		rotation: g.player.rotation,
 		moveSpeed: g.player.moveSpeed + 1,
-		posX: g.player.posX+deltaX,
-		posY: g.player.posY+deltaY,
+		posX: g.player.posX + deltaX,
+		posY: g.player.posY + deltaY,
 		explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
 		explosionNumSprites: 8,
 		explosionFrame: 0,
@@ -163,6 +161,7 @@ func addProjectile(g *Game) {
 		isActive: true,
 		image: g.resources.projectileImage,
 		explosion1: g.resources.projectileExplImage,
+		explosionSpeed: 3,
 	})
 	g.player.lastShot = g.count
 }

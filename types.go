@@ -19,6 +19,7 @@ type Projectile struct {
 	explosion1SpriteHeight float64
 	explosionNumSprites int
 	explosionFrame int
+	explosionSpeed int // lower is faster
 
 	isCollided bool
 	isActive bool
