@@ -11,24 +11,61 @@ import (
 
 
 func DrawPlayer(p *Tank, screen *ebiten.Image, count int) {
-	op := &ebiten.DrawImageOptions{}
-	var turretOffsetX, turretOffsetY float64
-	// Draw player hull
+	// Calculate base transformation
 	baseOffsetX := float64(p.hullImage.Bounds().Dx()) / 2
 	baseOffsetY := float64(p.hullImage.Bounds().Dy()) / 2
-	op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
-	op.GeoM.Rotate(p.rotation)
-	op.GeoM.Translate(p.posX+baseOffsetX, p.posY+baseOffsetY)
-	screen.DrawImage(p.hullImage, op)
-	// Draw player turret
+	finalOffsetX := p.posX+baseOffsetX
+	finalOffsetY := p.posY+baseOffsetY
+
+	// Draw tracks
+	tracksOp := &ebiten.DrawImageOptions{}
+	tracksOp.GeoM.Translate(-baseOffsetX, -baseOffsetY)
+	tracksOp.GeoM.Rotate(p.rotation)
+	tracksOp.GeoM.Translate(finalOffsetX, finalOffsetY)
+	trackOffsetX, trackOffsetY := getTracksOffset(p, true)
+	tracksOp.GeoM.Translate(trackOffsetX, trackOffsetY)
+	sx, sy := 0, 0
+	fx, fy := p.tracksImage.Bounds().Dx(), p.tracksImage.Bounds().Dy() / 2
+	if p.isMoving {
+		i := count % 2
+		screen.DrawImage(
+			p.tracksImage.SubImage(
+				image.Rect(sx, sy + i*fy, fx, fy + i*fy)).(*ebiten.Image), tracksOp)
+	} else {
+		screen.DrawImage(p.tracksImage.SubImage(image.Rect(sx, sy, fx, fy)).(*ebiten.Image), tracksOp)
+	}
+	trackOffsetX, trackOffsetY = getTracksOffset(p, false)
+	tracksOp.GeoM.Translate(trackOffsetX, trackOffsetY)
+	if p.isMoving {
+		i := count % 2
+		screen.DrawImage(
+			p.tracksImage.SubImage(
+				image.Rect(sx, sy + i*fy, fx, fy + i*fy)).(*ebiten.Image), tracksOp)
+	} else {
+		screen.DrawImage(p.tracksImage.SubImage(image.Rect(sx, sy, fx, fy)).(*ebiten.Image), tracksOp)
+	}
+
+	// Draw hull
+	hullOp := &ebiten.DrawImageOptions{}
+	hullOp.GeoM.Translate(-baseOffsetX, -baseOffsetY)
+	hullOp.GeoM.Rotate(p.rotation)
+	hullOp.GeoM.Translate(finalOffsetX, finalOffsetY)
+	screen.DrawImage(p.hullImage, hullOp)
+
+	// Draw turret
+	turretOp := &ebiten.DrawImageOptions{}
+	var turretOffsetX, turretOffsetY float64
+	turretOp.GeoM.Translate(-baseOffsetX, -baseOffsetY)
+	turretOp.GeoM.Rotate(p.rotation)
+	turretOp.GeoM.Translate(finalOffsetX, finalOffsetY)
 	if count - p.lastShot < 5 {
 		turretOffsetX, turretOffsetY = getTurretOffset(p, true)
 	} else {
 		turretOffsetX, turretOffsetY = getTurretOffset(p, false)
 	}
+	turretOp.GeoM.Translate(turretOffsetX, turretOffsetY)
+	screen.DrawImage(p.turretImage, turretOp)
 
-	op.GeoM.Translate(turretOffsetX, turretOffsetY)
-	screen.DrawImage(p.turretImage, op)
 
 	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), p.posX, p.posY)
 	ebitenutil.DebugPrint(screen, msg)
@@ -68,6 +105,7 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 }
 
 func UpdatePlayer(g *Game) {
+	g.player.isMoving = false
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
 		if g.count - g.player.lastShot  >= g.player.reloadSpeed {
 			addProjectile(g)
@@ -79,6 +117,7 @@ func UpdatePlayer(g *Game) {
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = 0
 		g.player.posY -= 1
+		g.player.isMoving = true
 		UpdateCollisions(g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
@@ -87,6 +126,7 @@ func UpdatePlayer(g *Game) {
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = math.Pi
 		g.player.posY += 1
+		g.player.isMoving = true
 		UpdateCollisions(g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
@@ -95,6 +135,7 @@ func UpdatePlayer(g *Game) {
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = 3 * math.Pi / 2
 		g.player.posX -= 1
+		g.player.isMoving = true
 		UpdateCollisions(g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
@@ -103,6 +144,7 @@ func UpdatePlayer(g *Game) {
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = math.Pi / 2
 		g.player.posX += 1
+		g.player.isMoving = true
 		UpdateCollisions(g)
 	}
 	tRotatedX, tRotatedY, tWidth, tHeight  := getRotatedCoords(&g.player)

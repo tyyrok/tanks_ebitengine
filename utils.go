@@ -26,7 +26,12 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	r.playerHullImage, _, err = ebitenutil.NewImageFromFile("resources/hull_new_mini.png")
+	//r.playerHullImage, _, err = ebitenutil.NewImageFromFile("resources/hull_new_mini.png")
+	r.playerHullImage, _, err = ebitenutil.NewImageFromFile("resources/hull_new_mini2.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.playerTracksImage, _, err = ebitenutil.NewImageFromFile("resources/tracks.png")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,4 +91,27 @@ func getTurretOffset(t *Tank, is_rollback bool) (float64, float64) {
 		}
 	}
 	return turretOffsetX, turretOffsetY
+}
+
+func getTracksOffset(t *Tank, is_left bool) (float64, float64) {
+	var offsetX, offsetY float64
+	if is_left {
+		offsetX, offsetY = 0, 0
+	} else {
+		if t.rotation == 0 {
+			offsetX = t.width - float64(t.tracksImage.Bounds().Dx())
+			offsetY = 0
+		} else if math.Round(t.rotation) == math.Round(math.Pi) {
+			offsetX = - t.width + float64(t.tracksImage.Bounds().Dx())
+			offsetY = 0
+		} else if math.Round(t.rotation) == math.Round(3*math.Pi/2) {
+			offsetX = 0
+			offsetY = - t.width + float64(t.tracksImage.Bounds().Dx())
+		} else {
+			offsetX = 0
+			offsetY = t.width - float64(t.tracksImage.Bounds().Dx())
+		}
+	}
+
+	return offsetX, offsetY
 }

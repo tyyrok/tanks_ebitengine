@@ -43,13 +43,15 @@ func main() {
 	loadResources(game)
 	initLevel(game)
 	game.player = Tank{
-		width: 22, height: 38,
+		width: 24, height: 38,
 		posX: 50, posY: 100,
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,
 		hullImage: game.resources.playerHullImage,
 		turretImage: game.resources.playerTurretImage,
-		fireRollbackOffset: 2,}
+		tracksImage: game.resources.playerTracksImage,
+		fireRollbackOffset: 2,
+		isMoving: false,}
 	ebiten.SetWindowSize(WindowWidth, WindowHeight)
 	ebiten.SetWindowTitle("Hello, Gamer!")
 	if err := ebiten.RunGame(game); err != nil {

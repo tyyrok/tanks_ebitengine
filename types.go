@@ -45,6 +45,7 @@ type Resource struct {
 	blockImage *ebiten.Image
 	playerHullImage *ebiten.Image
 	playerTurretImage *ebiten.Image
+	playerTracksImage *ebiten.Image
 	projectileImage *ebiten.Image
 	projectileExplImage *ebiten.Image
 }
@@ -56,9 +57,11 @@ type Tank struct {
 	rotation, prevRotation, moveSpeed float64
 	hullImage *ebiten.Image
 	turretImage *ebiten.Image
+	tracksImage *ebiten.Image
 	reloadSpeed int
 	lastShot int
 	fireRollbackOffset int
+	isMoving bool
 }
 
 func (t *Tank) checkBlockCollision(b *Block) bool {
