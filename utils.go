@@ -10,7 +10,7 @@ import (
 func loadResources(g *Game) {
 	var err error
 	r := Resource{}
-	r.background, _, err = ebitenutil.NewImageFromFile("resources/back.png")
+	r.background, _, err = ebitenutil.NewImageFromFile("resources/Ground_Tile_02_A.png")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,11 +22,10 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	r.blockImage, _, err = ebitenutil.NewImageFromFile("resources/tile_0018.png")
+	r.blockImage, _, err = ebitenutil.NewImageFromFile("resources/Container_A.png")
 	if err != nil {
 		log.Fatal(err)
 	}
-	//r.playerHullImage, _, err = ebitenutil.NewImageFromFile("resources/hull_new_mini.png")
 	r.playerHullImage, _, err = ebitenutil.NewImageFromFile("resources/hull_new_mini2.png")
 	if err != nil {
 		log.Fatal(err)

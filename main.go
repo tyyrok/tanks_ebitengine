@@ -45,6 +45,7 @@ func main() {
 	game.player = Tank{
 		width: 24, height: 38,
 		posX: 50, posY: 100,
+		prevPosX: 50, prevPosY: 100,
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,
 		hullImage: game.resources.playerHullImage,

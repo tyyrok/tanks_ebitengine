@@ -131,7 +131,6 @@ func UpdatePlayer(g *Game) {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		g.player.prevPosX = g.player.posX
-		g.player.prevPosY = g.player.posY
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = 3 * math.Pi / 2
 		g.player.posX -= 1
@@ -140,7 +139,6 @@ func UpdatePlayer(g *Game) {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		g.player.prevPosX = g.player.posX
-		g.player.prevPosY = g.player.posY
 		g.player.prevRotation = g.player.rotation
 		g.player.rotation = math.Pi / 2
 		g.player.posX += 1

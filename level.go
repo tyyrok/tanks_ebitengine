@@ -8,7 +8,15 @@ import (
 
 func DrawLevel(g *Game, screen *ebiten.Image) {
 	ebitenutil.DebugPrint(screen, "Hello, Gamer!")
-	screen.DrawImage(g.resources.background, nil)
+	tileWidth, tileHeight := g.resources.background.Bounds().Dx(), g.resources.background.Bounds().Dy()
+	for x := 0; x < ScreenWidth; x += tileWidth {
+		for y := 0; y < ScreenHeight; y += tileHeight {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(float64(x), float64(y))
+			screen.DrawImage(g.resources.background, op)
+		}
+	}
+	//screen.DrawImage(g.resources.background, nil)
 	for _, block := range g.blocks {
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(block.posX, block.posY)
@@ -17,12 +25,12 @@ func DrawLevel(g *Game, screen *ebiten.Image) {
 }
 
 func initLevel(g *Game) {
-	for i := range 5 {
+	for i := range 2 {
 		g.blocks = append(g.blocks, Block{
-			posX: float64(60*i),
-			posY: float64(50*i),
-			width: 18,
-			height: 18,
+			posX: float64(100*i),
+			posY: float64(100*i),
+			width: 51,
+			height: 26,
 			image: g.resources.blockImage,
 		})
 	}

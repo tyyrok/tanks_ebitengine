@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"log"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -43,6 +43,7 @@ type Block struct {
 type Resource struct {
 	background *ebiten.Image
 	blockImage *ebiten.Image
+	containerImage *ebiten.Image
 	playerHullImage *ebiten.Image
 	playerTurretImage *ebiten.Image
 	playerTracksImage *ebiten.Image
@@ -68,20 +69,16 @@ func (t *Tank) checkBlockCollision(b *Block) bool {
 	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
 	
 	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
-	if b.posX >= tRotatedX && b.posX <= (tRotatedX + tWidth) {
+
+	if (b.posX <= tRotatedX && (b.posX + b.width) >= (tRotatedX + tWidth)) || b.posX >= tRotatedX && b.posX <= (tRotatedX + tWidth) || (b.posX + b.width) >= tRotatedX && (b.posX + b.width) <= (tRotatedX + tWidth) {
 		if b.posY >= tRotatedY && b.posY <= (tRotatedY + tHeight) {
 			return true
 		}
 		if (b.posY + b.height) >= tRotatedY && (b.posY + b.height) <= (tRotatedY + tHeight) {
 			return  true
 		}
-	}
-	if (b.posX + b.width) >= tRotatedX && (b.posX + b.width) <= (tRotatedX + tWidth) {
-		if b.posY >= tRotatedY && b.posY <= (tRotatedY + tHeight) {
+		if b.posY >= tRotatedY && (tRotatedY + tHeight) >= b.posY + b.height {
 			return true
-		}
-		if (b.posY + b.height) >= tRotatedY && (b.posY + b.height) <= (tRotatedY + tHeight) {
-			return  true
 		}
 	}
 	return false
