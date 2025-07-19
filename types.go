@@ -1,10 +1,17 @@
 package main
 
 import (
-	"log"
+	//"log"
+
+	//"log"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
+
+type Rect interface{
+	getCoordinates() (float64, float64, float64, float64, float64)
+}
 
 type Projectile struct {
 	width float64
@@ -65,21 +72,33 @@ type Tank struct {
 	isMoving bool
 }
 
+func (t *Tank) getCoordinates() (float64, float64, float64, float64, float64) {
+	return t.posX, t.posY, t.width, t.height, t.rotation
+}
+
 func (t *Tank) checkBlockCollision(b *Block) bool {
 	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
-	
+	return checkRectCollision(tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY, b.width, b.height)
 	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
+}
 
-	if (b.posX <= tRotatedX && (b.posX + b.width) >= (tRotatedX + tWidth)) || b.posX >= tRotatedX && b.posX <= (tRotatedX + tWidth) || (b.posX + b.width) >= tRotatedX && (b.posX + b.width) <= (tRotatedX + tWidth) {
-		if b.posY >= tRotatedY && b.posY <= (tRotatedY + tHeight) {
-			return true
-		}
-		if (b.posY + b.height) >= tRotatedY && (b.posY + b.height) <= (tRotatedY + tHeight) {
-			return  true
-		}
-		if b.posY >= tRotatedY && (tRotatedY + tHeight) >= b.posY + b.height {
-			return true
-		}
+func (p *Projectile) getCoordinates() (float64, float64, float64, float64, float64) {
+	return p.posX, p.posY, p.width, p.height, p.rotation
+}
+
+func (p *Projectile) checkBlockCollision(b *Block) bool {
+	return checkRectCollision(p.posX, p.posY, p.width, p.height, b.posX, b.posY, b.width, b.height)
+}
+
+func (p *Projectile) getExplositionOffset() (float64, float64) {
+	switch math.Round(p.rotation) {
+	case 0:
+		return p.posX - p.explosion1SpriteWidth / 2, p.posY - p.explosion1SpriteHeight / 2
+	case math.Round(math.Pi):
+		return p.posX - p.explosion1SpriteWidth / 2, p.posY + p.height / 2 - p.explosion1SpriteHeight / 2
+	case math.Round(3*math.Pi/2):
+		return p.posX + p.width / 2 - p.explosion1SpriteWidth / 2, p.posY - p.explosion1SpriteHeight / 2
+	default:
+		return p.posX - p.explosion1SpriteWidth / 2, p.posY - p.explosion1SpriteHeight / 2
 	}
-	return false
 }

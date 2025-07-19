@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -80,7 +81,8 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 		}
 		op := &ebiten.DrawImageOptions{}
 		if shot.isCollided {
-			op.GeoM.Translate(shot.posX - shot.explosion1SpriteWidth / 2, shot.posY - shot.explosion1SpriteHeight / 2)
+			offsetX, offsetY := shot.getExplositionOffset()
+			op.GeoM.Translate(offsetX, offsetY)
 			sx, sy := shot.explosionFrame * int(shot.explosion1SpriteWidth), 0
 			screen.DrawImage(shot.explosion1.SubImage(image.Rect(sx, sy, sx+int(shot.explosion1SpriteWidth), sy+int(shot.explosion1SpriteHeight))).(*ebiten.Image), op)
 			if shot.explosionFrame == shot.explosionNumSprites - 1 {
@@ -172,7 +174,7 @@ func UpdateProjectiles(g *Game) {
 			deltaX := -math.Sin(shot.rotation) * shot.moveSpeed
 			g.projectiles[i].posX -= deltaX
 			g.projectiles[i].posY -= deltaY
-			if checkProjectileCollision(&shot) {
+			if checkProjectileCollision(&shot, g) {
 				g.projectiles[i].isCollided = true
 			}
 		}
@@ -212,8 +214,13 @@ func addProjectile(g *Game) {
 	g.player.lastShot = g.count
 }
 
-func checkProjectileCollision(p *Projectile) bool {
-	if p.posX <= minXCoordinate || p.posY <= minYCoordinate || p.posX >= maxXCoordinate - 25 || p.posY >= maxYCoordinate - 25 {
+func checkProjectileCollision(p *Projectile, g *Game) bool {
+	for _, block := range g.blocks {
+		if p.checkBlockCollision(&block) {
+			return true
+		}
+	}
+	if p.posX <= minXCoordinate || p.posY <= minYCoordinate || p.posX >= maxXCoordinate || p.posY >= maxYCoordinate {
 		return  true
 	}
 	return false

@@ -42,18 +42,19 @@ func loadResources(g *Game) {
 	g.resources = r
 }
 
-func getRotatedCoords(t *Tank) (float64, float64, float64, float64) {
+func getRotatedCoords(t Rect) (float64, float64, float64, float64) {
 	var tWidth, tHeight, tRotatedX, tRotatedY float64
-	if t.rotation == 0 || math.Round(t.rotation) == math.Round(math.Pi) {
-		tWidth = t.width
-		tHeight = t.height
-		tRotatedX = t.posX
-		tRotatedY = t.posY
+	x, y, width, height, rotation := t.getCoordinates()
+	if rotation == 0 || math.Round(rotation) == math.Round(math.Pi) {
+		tWidth = width
+		tHeight = height
+		tRotatedX = x
+		tRotatedY = y
 	} else {
-		tWidth = t.height
-		tHeight = t.width
-		tRotatedX = (t.posX + t.width / 2) - (t.height / 2)
-		tRotatedY = (t.posY + t.height / 2) - (t.width / 2)
+		tWidth = height
+		tHeight = width
+		tRotatedX = (x + width / 2) - (height / 2)
+		tRotatedY = (y + height / 2) - (width / 2)
 	}
 	return tRotatedX, tRotatedY, tWidth, tHeight
 }
@@ -113,4 +114,14 @@ func getTracksOffset(t *Tank, is_left bool) (float64, float64) {
 	}
 
 	return offsetX, offsetY
+}
+
+
+func checkRectCollision(aX, aY, aWidth, aHeight, bX, bY, bWidth, bHeight float64) bool {
+	if ((aX >= bX) && (aX <= (bX + bWidth))) || (((aX + aWidth) >= bX) && ((aX + aWidth) <= (bX + bWidth))) {
+		if ((aY >= bY) && (aY <= (bY + bHeight))) || ((aY + aHeight) >= bY && ((aY + aHeight) <= (bY + bHeight))) {
+			return true
+		}
+	}
+	return false
 }
