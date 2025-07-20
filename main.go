@@ -9,8 +9,8 @@ import (
 const (
 	ScreenWidth = 300
 	ScreenHeight = 300
-	WindowWidth = 1080
-	WindowHeight = 720
+	WindowWidth = 480
+	WindowHeight = 480
 	minXCoordinate = 0
 	minYCoordinate = 0
 	maxXCoordinate = 300

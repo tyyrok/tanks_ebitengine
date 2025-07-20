@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"image"
-	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"

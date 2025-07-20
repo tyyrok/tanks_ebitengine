@@ -1,9 +1,6 @@
 package main
 
 import (
-	//"log"
-
-	//"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
