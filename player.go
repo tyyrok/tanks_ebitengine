@@ -69,8 +69,6 @@ func DrawPlayer(p *Tank, screen *ebiten.Image, count int) {
 
 	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), p.posX, p.posY)
 	ebitenutil.DebugPrint(screen, msg)
-	msg = "\nW - go up, S - go down, A - go left, D - go right"
-	ebitenutil.DebugPrint(screen, msg)
 }
 
 func DrawProjectiles(g *Game, screen *ebiten.Image) {

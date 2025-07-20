@@ -22,7 +22,11 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	r.blockImage, _, err = ebitenutil.NewImageFromFile("resources/Container_A.png")
+	r.containerImage, _, err = ebitenutil.NewImageFromFile("resources/Container_A.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.blockImage, _, err = ebitenutil.NewImageFromFile("resources/Block_C_02.png")
 	if err != nil {
 		log.Fatal(err)
 	}

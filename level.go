@@ -6,6 +6,24 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
+const (
+	LevelCellOffsetX = 30
+	LevelCellOffsetY = 30
+)
+
+var levelObjects = map[int][]int{
+	0:[]int{0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+	1:[]int{0, 2, 0, 0, 0, 0, 1, 0, 0, 0},
+	2:[]int{0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+	3:[]int{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
+	4:[]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	5:[]int{0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+	6:[]int{0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
+	7:[]int{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
+	8:[]int{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+	9:[]int{0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+}
+
 func DrawLevel(g *Game, screen *ebiten.Image) {
 	ebitenutil.DebugPrint(screen, "Hello, Gamer!")
 	tileWidth, tileHeight := g.resources.background.Bounds().Dx(), g.resources.background.Bounds().Dy()
@@ -25,13 +43,26 @@ func DrawLevel(g *Game, screen *ebiten.Image) {
 }
 
 func initLevel(g *Game) {
-	for i := range 2 {
-		g.blocks = append(g.blocks, Block{
-			posX: float64(100*i),
-			posY: float64(100*i),
-			width: 51,
-			height: 26,
-			image: g.resources.blockImage,
-		})
+	for k, v := range levelObjects {
+		for i, elem := range v {
+			switch elem {
+			case 1:
+				g.blocks = append(g.blocks, Block{
+					posX: float64(i*LevelCellOffsetX),
+					posY: float64(k*LevelCellOffsetY),
+					width: float64(g.resources.blockImage.Bounds().Dx()),
+					height: float64(g.resources.blockImage.Bounds().Dy()),
+					image: g.resources.blockImage,
+				})
+			case 2:
+				g.blocks = append(g.blocks, Block{
+					posX: float64(i*LevelCellOffsetX),
+					posY: float64(k*LevelCellOffsetY),
+					width: float64(g.resources.containerImage.Bounds().Dx()),
+					height: float64(g.resources.containerImage.Bounds().Dy()),
+					image: g.resources.containerImage,
+				})
+			}
+		}
 	}
 }
