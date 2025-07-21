@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	//"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -21,6 +22,7 @@ type Projectile struct {
 	explosion1 *ebiten.Image
 	explosion1SpriteWidth float64
 	explosion1SpriteHeight float64
+	scale float64
 	explosionNumSprites int
 	explosionFrame int
 	explosionSpeed int // lower is faster
@@ -41,6 +43,7 @@ type Game struct{
 type Block struct {
 	posX, posY float64
 	width, height float64
+	rotation float64
 	image *ebiten.Image
 }
 
@@ -69,13 +72,19 @@ type Tank struct {
 	isMoving bool
 }
 
+
+func (b *Block) getCoordinates() (float64, float64, float64, float64, float64) {
+	return b.posX, b.posY, b.width, b.height, b.rotation
+}
+
 func (t *Tank) getCoordinates() (float64, float64, float64, float64, float64) {
 	return t.posX, t.posY, t.width, t.height, t.rotation
 }
 
 func (t *Tank) checkBlockCollision(b *Block) bool {
 	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
-	return checkRectCollision(tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY, b.width, b.height)
+	bRotatedX, bRotatedY, bWidth, bHeight := getRotatedCoords(b)
+	return checkRectCollision(tRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight)
 	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
 }
 
@@ -84,7 +93,10 @@ func (p *Projectile) getCoordinates() (float64, float64, float64, float64, float
 }
 
 func (p *Projectile) checkBlockCollision(b *Block) bool {
-	return checkRectCollision(p.posX, p.posY, p.width, p.height, b.posX, b.posY, b.width, b.height)
+	rotatedX, rotatedY, width, height := getRotatedCoords(p)
+	bRotatedX, bRotatedY, bWidth, bHeight := getRotatedCoords(b)
+	//log.Printf("aX: %0f, aY: %0f, aW: %0f, aH: %0f, bX: %0f, bY: %0f, bW: %0f, bH: %0f", rotatedX, rotatedY, width, height, b.posX, b.posY, b.width, b.height)
+	return checkRectCollision(rotatedX, rotatedY, width*p.scale, height*p.scale, bRotatedX, bRotatedY, bWidth, bHeight)
 }
 
 func (p *Projectile) getExplositionOffset() (float64, float64) {

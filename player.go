@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	//"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -94,7 +95,7 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 			baseOffsetY := float64(shot.image.Bounds().Dy()) / 2
 			op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
 			op.GeoM.Rotate(shot.rotation)
-			op.GeoM.Scale(0.2, 0.2)
+			op.GeoM.Scale(shot.scale, shot.scale)
 			op.GeoM.Translate(shot.posX, shot.posY)
 			screen.DrawImage(shot.image, op)
 		}
@@ -167,6 +168,7 @@ func UpdateProjectiles(g *Game) {
 			continue
 		}
 		if !shot.isCollided {
+			//log.Println(shot.posX, shot.posY)
 			deltaY := math.Cos(shot.rotation) * shot.moveSpeed
 			deltaX := -math.Sin(shot.rotation) * shot.moveSpeed
 			g.projectiles[i].posX -= deltaX
@@ -193,8 +195,8 @@ func addProjectile(g *Game) {
 	}
 
 	g.projectiles = append(g.projectiles, Projectile{
-		width: ligthProjectileWidth,
-		height: ligthProjectileHeight,
+		width: float64(g.resources.projectileImage.Bounds().Dx()),
+		height: float64(g.resources.projectileImage.Bounds().Dy()),
 		rotation: g.player.rotation,
 		moveSpeed: g.player.moveSpeed + 1,
 		posX: g.player.posX + deltaX,
@@ -202,6 +204,7 @@ func addProjectile(g *Game) {
 		explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
 		explosionNumSprites: 8,
 		explosionFrame: 0,
+		scale: 0.3,
 		isCollided: false,
 		isActive: true,
 		image: g.resources.projectileImage,

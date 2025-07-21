@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -11,17 +12,18 @@ const (
 	LevelCellOffsetY = 30
 )
 
+
 var levelObjects = map[int][]int{
 	0:[]int{0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
-	1:[]int{0, 2, 0, 0, 0, 0, 1, 0, 0, 0},
+	1:[]int{2, 0, 0, 0, 0, 0, 1, 0, 0, 0},
 	2:[]int{0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
 	3:[]int{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
 	4:[]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	5:[]int{0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
 	6:[]int{0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
-	7:[]int{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
-	8:[]int{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-	9:[]int{0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+	7:[]int{0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+	8:[]int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	9:[]int{0, 0, 0, 3, 0, 3, 0, 0, 0, 0},
 }
 
 func DrawLevel(g *Game, screen *ebiten.Image) {
@@ -37,7 +39,11 @@ func DrawLevel(g *Game, screen *ebiten.Image) {
 	//screen.DrawImage(g.resources.background, nil)
 	for _, block := range g.blocks {
 		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(block.posX, block.posY)
+		baseOffsetX := float64(block.image.Bounds().Dx()) / 2
+		baseOffsetY := float64(block.image.Bounds().Dy()) / 2
+		op.GeoM.Translate(-baseOffsetX, -baseOffsetY)
+		op.GeoM.Rotate(block.rotation)
+		op.GeoM.Translate(block.posX+baseOffsetX, block.posY+baseOffsetY)
 		screen.DrawImage(block.image, op)
 	}
 }
@@ -50,6 +56,7 @@ func initLevel(g *Game) {
 				g.blocks = append(g.blocks, Block{
 					posX: float64(i*LevelCellOffsetX),
 					posY: float64(k*LevelCellOffsetY),
+					rotation: 0,
 					width: float64(g.resources.blockImage.Bounds().Dx()),
 					height: float64(g.resources.blockImage.Bounds().Dy()),
 					image: g.resources.blockImage,
@@ -58,6 +65,16 @@ func initLevel(g *Game) {
 				g.blocks = append(g.blocks, Block{
 					posX: float64(i*LevelCellOffsetX),
 					posY: float64(k*LevelCellOffsetY),
+					rotation: 0,
+					width: float64(g.resources.containerImage.Bounds().Dx()),
+					height: float64(g.resources.containerImage.Bounds().Dy()),
+					image: g.resources.containerImage,
+				})
+			case 3:
+				g.blocks = append(g.blocks, Block{
+					posX: float64(i*LevelCellOffsetX),
+					posY: float64(k*LevelCellOffsetY),
+					rotation: math.Pi /2,
 					width: float64(g.resources.containerImage.Bounds().Dx()),
 					height: float64(g.resources.containerImage.Bounds().Dy()),
 					image: g.resources.containerImage,

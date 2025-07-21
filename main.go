@@ -15,8 +15,6 @@ const (
 	minYCoordinate = 0
 	maxXCoordinate = 300
 	maxYCoordinate = 300
-	ligthProjectileWidth = 12
-	ligthProjectileHeight = 25
 )
 
 
@@ -43,7 +41,8 @@ func main() {
 	loadResources(game)
 	initLevel(game)
 	game.player = Tank{
-		width: 24, height: 38,
+		width: float64(game.resources.playerHullImage.Bounds().Dx()),
+		height: float64(game.resources.playerHullImage.Bounds().Dy()),
 		posX: 50, posY: 100,
 		prevPosX: 50, prevPosY: 100,
 		rotation: 0, moveSpeed: 1.2,
