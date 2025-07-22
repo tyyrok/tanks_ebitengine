@@ -2,7 +2,7 @@ package main
 
 import (
 	"math"
-	//"log"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -90,7 +90,7 @@ func (t *Tank) checkBlockCollision(b *Block) bool {
 }
 
 func (p *Projectile) getCoordinates() (float64, float64, float64, float64, float64) {
-	return p.posX, p.posY, p.width, p.height, p.rotation
+	return p.posX, p.posY, p.width*p.scale, p.height*p.scale, p.rotation
 }
 
 func (p *Projectile) checkBlockCollision(b *Block) bool {

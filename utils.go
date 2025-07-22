@@ -63,6 +63,7 @@ func getRotatedCoords(t Rect) (float64, float64, float64, float64) {
 	return tRotatedX, tRotatedY, tWidth, tHeight
 }
 
+
 func getTurretOffset(t *Tank, is_rollback bool) (float64, float64) {
 	var turretOffsetX, turretOffsetY float64
 	if is_rollback {

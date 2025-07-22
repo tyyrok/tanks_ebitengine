@@ -13,17 +13,17 @@ const (
 )
 
 
-var levelObjects = map[int][]int{
-	0:[]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	1:[]int{2, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-	2:[]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	3:[]int{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
-	4:[]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	5:[]int{0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-	6:[]int{0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-	7:[]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	8:[]int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	9:[]int{0, 0, 0, 3, 0, 3, 0, 0, 0, 0},
+var levelObjects = map[int][]uint16{
+	0:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	1:{2, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+	2:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	3:{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
+	4:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	5:{0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+	6:{0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+	7:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	8:{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	9:{0, 0, 0, 3, 0, 3, 0, 0, 0, 0},
 }
 
 func DrawLevel(g *Game, screen *ebiten.Image) {
@@ -36,7 +36,6 @@ func DrawLevel(g *Game, screen *ebiten.Image) {
 			screen.DrawImage(g.resources.background, op)
 		}
 	}
-	//screen.DrawImage(g.resources.background, nil)
 	for _, block := range g.blocks {
 		op := &ebiten.DrawImageOptions{}
 		baseOffsetX := float64(block.image.Bounds().Dx()) / 2
