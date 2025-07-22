@@ -120,11 +120,35 @@ func getTracksOffset(t *Tank, is_left bool) (float64, float64) {
 	return offsetX, offsetY
 }
 
-
-func checkRectCollision(aX, aY, aWidth, aHeight, bX, bY, bWidth, bHeight float64) bool {
-	if ((aX >= bX) && (aX <= (bX + bWidth))) || (((aX + aWidth) >= bX) && ((aX + aWidth) <= (bX + bWidth))) {
-		if ((aY >= bY) && (aY <= (bY + bHeight))) || (((aY + aHeight) >= bY) && ((aY + aHeight) <= (bY + bHeight))) {
-			return true
+func checkRectCollision(aRotation, aX, aY, aWidth, aHeight, bX, bY, bWidth, bHeight float64) bool {
+	if (aX >= bX) && (aX <= (bX + bWidth)) {
+		if (aY >= bY) && (aY <= (bY + bHeight)) {
+			if (math.Round(aRotation) == math.Round(math.Pi / 2)) || (math.Round(aRotation) == math.Round(math.Pi)) {
+				return false
+			} else {
+				return true
+			}
+		} else if ((aY + aHeight) >= bY) && ((aY + aHeight) <= (bY + bHeight)) {
+			if (aRotation == math.Round(math.Pi / 2)) || (math.Round(aRotation) == 0) {
+				return false
+			} else {
+				return true
+			}
+		}
+	}
+	if ((aX + aWidth) >= bX) && ((aX + aWidth) <= (bX + bWidth)) {
+		if (aY >= bY) && (aY <= (bY + bHeight)) {
+			if (math.Round(aRotation) == math.Round(3*math.Pi / 2)) || (math.Round(aRotation) == math.Round(math.Pi)) {
+				return false
+			} else {
+				return true
+			}
+		} else if ((aY + aHeight) >= bY) && ((aY + aHeight) <= (bY + bHeight)) {
+			if (aRotation == math.Round(3* math.Pi / 2)) || (math.Round(aRotation) == 0) {
+				return false
+			} else {
+				return true
+			}
 		}
 	}
 	return false

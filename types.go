@@ -84,7 +84,8 @@ func (t *Tank) getCoordinates() (float64, float64, float64, float64, float64) {
 func (t *Tank) checkBlockCollision(b *Block) bool {
 	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
 	bRotatedX, bRotatedY, bWidth, bHeight := getRotatedCoords(b)
-	return checkRectCollision(tRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight)
+	//return checkRectCollision(tRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight)
+	return checkRectCollision(t.rotation, tRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight)
 	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
 }
 
@@ -96,7 +97,7 @@ func (p *Projectile) checkBlockCollision(b *Block) bool {
 	rotatedX, rotatedY, width, height := getRotatedCoords(p)
 	bRotatedX, bRotatedY, bWidth, bHeight := getRotatedCoords(b)
 	//log.Printf("aX: %0f, aY: %0f, aW: %0f, aH: %0f, bX: %0f, bY: %0f, bW: %0f, bH: %0f", rotatedX, rotatedY, width, height, b.posX, b.posY, b.width, b.height)
-	return checkRectCollision(rotatedX, rotatedY, width*p.scale, height*p.scale, bRotatedX, bRotatedY, bWidth, bHeight)
+	return checkRectCollision(p.rotation, rotatedX, rotatedY, width*p.scale, height*p.scale, bRotatedX, bRotatedY, bWidth, bHeight)
 }
 
 func (p *Projectile) getExplositionOffset() (float64, float64) {

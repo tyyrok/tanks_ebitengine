@@ -43,8 +43,8 @@ func main() {
 	game.player = Tank{
 		width: float64(game.resources.playerHullImage.Bounds().Dx()),
 		height: float64(game.resources.playerHullImage.Bounds().Dy()),
-		posX: 50, posY: 100,
-		prevPosX: 50, prevPosY: 100,
+		posX: 134, posY: 260,
+		prevPosX: 134, prevPosY: 260,
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,
 		hullImage: game.resources.playerHullImage,
