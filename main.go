@@ -28,7 +28,8 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	DrawLevel(g, screen)
-	DrawPlayer(&g.player, screen, g.count)
+	DrawEnemies(g, screen)
+	DrawPlayer(g, screen)
 	DrawProjectiles(g, screen)
 }
 
@@ -45,6 +46,7 @@ func main() {
 		height: float64(game.resources.playerHullImage.Bounds().Dy()),
 		posX: 134, posY: 260,
 		prevPosX: 134, prevPosY: 260,
+		scale: 1,
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,
 		hullImage: game.resources.playerHullImage,

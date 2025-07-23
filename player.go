@@ -11,7 +11,13 @@ import (
 )
 
 
-func DrawPlayer(p *Tank, screen *ebiten.Image, count int) {
+func DrawPlayer(g *Game, screen *ebiten.Image) {
+	DrawTank(&g.player, screen, g.count)
+	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), g.player.posX, g.player.posY)
+	ebitenutil.DebugPrint(screen, msg)
+}
+
+func DrawTank(p *Tank, screen *ebiten.Image, count int) {
 	// Calculate base transformation
 	baseOffsetX := float64(p.hullImage.Bounds().Dx()) / 2
 	baseOffsetY := float64(p.hullImage.Bounds().Dy()) / 2
@@ -220,6 +226,11 @@ func checkProjectileCollision(p *Projectile, g *Game) bool {
 			return true
 		}
 	}
+	for _, e := range g.tanks {
+		if p.checkBlockCollision(&e) {
+			return  true
+		}
+	}
 	if p.posX <= minXCoordinate || p.posY <= minYCoordinate || p.posX >= maxXCoordinate || p.posY >= maxYCoordinate {
 		return  true
 	}
@@ -229,6 +240,13 @@ func checkProjectileCollision(p *Projectile, g *Game) bool {
 func UpdateCollisions(g *Game) {
 	for _, block := range g.blocks {
 		if g.player.checkBlockCollision(&block) {
+			g.player.posX = g.player.prevPosX
+			g.player.posY = g.player.prevPosY
+			g.player.rotation = g.player.prevRotation
+		}
+	}
+	for _, tank := range g.tanks {
+		if g.player.checkBlockCollision(&tank) {
 			g.player.posX = g.player.prevPosX
 			g.player.posY = g.player.prevPosY
 			g.player.rotation = g.player.prevRotation

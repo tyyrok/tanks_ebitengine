@@ -42,6 +42,18 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	r.enemy1HullImage, _, err = ebitenutil.NewImageFromFile("resources/e1Hull_04.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy1TracksImage, _, err = ebitenutil.NewImageFromFile("resources/tracks.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy1TurretImage, _, err = ebitenutil.NewImageFromFile("resources/Gun_03.png")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	g.resources = r
 }

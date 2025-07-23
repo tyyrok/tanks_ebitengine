@@ -14,10 +14,10 @@ const (
 
 
 var levelObjects = map[int][]uint16{
-	0:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	0:{0, 0, 0, 0, 0, 0, 0, 0, 4, 0},
 	1:{2, 0, 0, 0, 0, 0, 1, 0, 0, 0},
 	2:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	3:{0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
+	3:{0, 4, 0, 1, 0, 0, 0, 0, 1, 0},
 	4:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	5:{0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
 	6:{0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
@@ -77,6 +77,21 @@ func initLevel(g *Game) {
 					width: float64(g.resources.containerImage.Bounds().Dx()),
 					height: float64(g.resources.containerImage.Bounds().Dy()),
 					image: g.resources.containerImage,
+				})
+			case 4:
+				g.tanks = append(g.tanks, Tank{
+					width: float64(g.resources.playerHullImage.Bounds().Dx()),
+					height: float64(g.resources.playerHullImage.Bounds().Dy()),
+					posX: float64(i*LevelCellOffsetX), posY: float64(k*LevelCellOffsetY),
+					prevPosX: float64(i*LevelCellOffsetX), prevPosY: float64(k*LevelCellOffsetY),
+					rotation: math.Pi, moveSpeed: 0,
+					reloadSpeed: 60, lastShot: 0,
+					scale: 1,
+					hullImage: g.resources.enemy1HullImage,
+					turretImage: g.resources.enemy1TurretImage,
+					tracksImage: g.resources.playerTracksImage,
+					fireRollbackOffset: 2,
+					isMoving: false,
 				})
 			}
 		}

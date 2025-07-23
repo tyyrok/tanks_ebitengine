@@ -2,7 +2,7 @@ package main
 
 import (
 	"math"
-	"log"
+	//"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -56,6 +56,9 @@ type Resource struct {
 	playerTracksImage *ebiten.Image
 	projectileImage *ebiten.Image
 	projectileExplImage *ebiten.Image
+	enemy1HullImage *ebiten.Image
+	enemy1TracksImage *ebiten.Image
+	enemy1TurretImage *ebiten.Image
 }
 
 type Tank struct {
@@ -63,6 +66,7 @@ type Tank struct {
 	posX, posY float64
 	prevPosX, prevPosY float64
 	rotation, prevRotation, moveSpeed float64
+	scale float64
 	hullImage *ebiten.Image
 	turretImage *ebiten.Image
 	tracksImage *ebiten.Image
@@ -81,7 +85,7 @@ func (t *Tank) getCoordinates() (float64, float64, float64, float64, float64) {
 	return t.posX, t.posY, t.width, t.height, t.rotation
 }
 
-func (t *Tank) checkBlockCollision(b *Block) bool {
+func (t *Tank) checkBlockCollision(b Rect) bool {
 	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
 	bRotatedX, bRotatedY, bWidth, bHeight := getRotatedCoords(b)
 	//return checkRectCollision(tRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight)
@@ -93,7 +97,7 @@ func (p *Projectile) getCoordinates() (float64, float64, float64, float64, float
 	return p.posX, p.posY, p.width*p.scale, p.height*p.scale, p.rotation
 }
 
-func (p *Projectile) checkBlockCollision(b *Block) bool {
+func (p *Projectile) checkBlockCollision(b Rect) bool {
 	rotatedX, rotatedY, width, height := getRotatedCoords(p)
 	bRotatedX, bRotatedY, bWidth, bHeight := getRotatedCoords(b)
 	//log.Printf("aX: %0f, aY: %0f, aW: %0f, aH: %0f, bX: %0f, bY: %0f, bW: %0f, bH: %0f", rotatedX, rotatedY, width, height, b.posX, b.posY, b.width, b.height)
