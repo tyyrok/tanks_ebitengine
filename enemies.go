@@ -17,6 +17,7 @@ func DrawEnemies(g *Game, screen *ebiten.Image) {
 func UpdateEnemies(g *Game) {
 	for i, e := range g.tanks {
 		g.tanks[i].isMoving = false
+		checkPlayer(&g.tanks[i], g)
 		if e.isMovable {
 			switch rand.IntN(4) {
 			case 0, 1:
@@ -39,7 +40,6 @@ func moveEnemy(e *Tank, g *Game) {
 	case 0:
 		e.posY -= e.moveSpeed
 		UpdateCollisions(e, g)
-
 	case math.Round(math.Pi):
 		e.posY += e.moveSpeed
 		UpdateCollisions(e, g)
@@ -59,7 +59,7 @@ func rotateEnemy(e *Tank, g *Game) {
 	if g.count % 20 != 0 {
 		return
 	}
-	switch rand.IntN(3) {
+	switch rand.IntN(2) {
 	case 0:
 		e.rotation += math.Pi / 2
 	case 1:
@@ -74,6 +74,31 @@ func rotateEnemy(e *Tank, g *Game) {
 	UpdateCollisions(e, g)
 }
 
-func fireEnemy(e *Tank) {
+func checkPlayer(e *Tank, g *Game) {
+	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(e)
+	bRotatedX, bRotatedY, bWidth, bHeight := getRotatedCoords(&g.player)
+	switch math.Round(e.rotation) {
+	case 0:
+		if checkRectCollision(e.rotation, tRotatedX, bRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight) {
+			fireEnemy(e, g)
+		}
+	case math.Round(math.Pi):
+		if checkRectCollision(e.rotation, tRotatedX, bRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight) {
+			fireEnemy(e, g)
+		}
+	case math.Round(3*math.Pi/2):
+		if checkRectCollision(e.rotation, bRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight) {
+			fireEnemy(e, g)
+		}
+	default:
+		if checkRectCollision(e.rotation, bRotatedX, bRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight) {
+			fireEnemy(e, g)
+		}
+	}
+}
 
+func fireEnemy(e *Tank, g *Game) {
+	if g.count - e.lastShot >= e.reloadSpeed {
+		addProjectile(e, g)
+	}
 }

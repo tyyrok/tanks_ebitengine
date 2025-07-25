@@ -166,3 +166,37 @@ func checkRectCollision(aRotation, aX, aY, aWidth, aHeight, bX, bY, bWidth, bHei
 	}
 	return false
 }
+
+func UpdateCollisions(t *Tank, g *Game) {
+	for _, block := range g.blocks {
+		if t.checkBlockCollision(&block) {
+			t.posX = t.prevPosX
+			t.posY = t.prevPosY
+			t.rotation = t.prevRotation
+		}
+	}
+	for i, tank := range g.tanks {
+		if &g.tanks[i] == t {
+			continue
+		}
+		if t.checkBlockCollision(&tank) {
+			t.posX = t.prevPosX
+			t.posY = t.prevPosY
+			t.rotation = t.prevRotation
+		}
+	}
+	tRotatedX, tRotatedY, tWidth, tHeight  := getRotatedCoords(t)
+	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f", tRotatedX, tRotatedY, tWidth, tHeight)
+	if tRotatedX <= minXCoordinate {
+		t.posX = t.prevPosX
+	}
+	if tRotatedX >= maxXCoordinate - tWidth {
+		t.posX = t.prevPosX
+	}
+	if tRotatedY <= minYCoordinate {
+		t.posY = t.prevPosY
+	}
+	if tRotatedY >= maxYCoordinate - tHeight {
+		t.posY = t.prevPosY
+	}
+}
