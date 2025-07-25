@@ -20,6 +20,7 @@ const (
 
 func (g *Game) Update() error {
 	g.count++
+	UpdateEnemies(g)
 	UpdatePlayer(g)
 	UpdateProjectiles(g)
 

@@ -74,6 +74,7 @@ type Tank struct {
 	lastShot int
 	fireRollbackOffset int
 	isMoving bool
+	isMovable bool
 }
 
 

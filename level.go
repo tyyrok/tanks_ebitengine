@@ -84,7 +84,7 @@ func initLevel(g *Game) {
 					height: float64(g.resources.playerHullImage.Bounds().Dy()),
 					posX: float64(i*LevelCellOffsetX), posY: float64(k*LevelCellOffsetY),
 					prevPosX: float64(i*LevelCellOffsetX), prevPosY: float64(k*LevelCellOffsetY),
-					rotation: math.Pi, moveSpeed: 0,
+					rotation: math.Pi, moveSpeed: 1,
 					reloadSpeed: 60, lastShot: 0,
 					scale: 1,
 					hullImage: g.resources.enemy1HullImage,
@@ -92,6 +92,7 @@ func initLevel(g *Game) {
 					tracksImage: g.resources.playerTracksImage,
 					fireRollbackOffset: 2,
 					isMoving: false,
+					isMovable: true,
 				})
 			}
 		}

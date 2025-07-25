@@ -124,7 +124,7 @@ func UpdatePlayer(g *Game) {
 		g.player.rotation = 0
 		g.player.posY -= 1
 		g.player.isMoving = true
-		UpdateCollisions(g)
+		UpdateCollisions(&g.player, g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		g.player.prevPosX = g.player.posX
@@ -133,7 +133,7 @@ func UpdatePlayer(g *Game) {
 		g.player.rotation = math.Pi
 		g.player.posY += 1
 		g.player.isMoving = true
-		UpdateCollisions(g)
+		UpdateCollisions(&g.player, g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		g.player.prevPosX = g.player.posX
@@ -141,7 +141,7 @@ func UpdatePlayer(g *Game) {
 		g.player.rotation = 3 * math.Pi / 2
 		g.player.posX -= 1
 		g.player.isMoving = true
-		UpdateCollisions(g)
+		UpdateCollisions(&g.player, g)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		g.player.prevPosX = g.player.posX
@@ -149,21 +149,7 @@ func UpdatePlayer(g *Game) {
 		g.player.rotation = math.Pi / 2
 		g.player.posX += 1
 		g.player.isMoving = true
-		UpdateCollisions(g)
-	}
-	tRotatedX, tRotatedY, tWidth, tHeight  := getRotatedCoords(&g.player)
-	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f", tRotatedX, tRotatedY, tWidth, tHeight)
-	if tRotatedX <= minXCoordinate {
-		g.player.posX = g.player.prevPosX
-	}
-	if tRotatedX >= maxXCoordinate - tWidth {
-		g.player.posX = g.player.prevPosX
-	}
-	if tRotatedY <= minYCoordinate {
-		g.player.posY = g.player.prevPosY
-	}
-	if tRotatedY >= maxYCoordinate - tHeight {
-		g.player.posY = g.player.prevPosY
+		UpdateCollisions(&g.player, g)
 	}
 }
 
@@ -237,19 +223,33 @@ func checkProjectileCollision(p *Projectile, g *Game) bool {
 	return false
 }
 
-func UpdateCollisions(g *Game) {
+func UpdateCollisions(t *Tank, g *Game) {
 	for _, block := range g.blocks {
-		if g.player.checkBlockCollision(&block) {
-			g.player.posX = g.player.prevPosX
-			g.player.posY = g.player.prevPosY
-			g.player.rotation = g.player.prevRotation
+		if t.checkBlockCollision(&block) {
+			t.posX = t.prevPosX
+			t.posY = t.prevPosY
+			t.rotation = t.prevRotation
 		}
 	}
 	for _, tank := range g.tanks {
-		if g.player.checkBlockCollision(&tank) {
-			g.player.posX = g.player.prevPosX
-			g.player.posY = g.player.prevPosY
-			g.player.rotation = g.player.prevRotation
+		if t.checkBlockCollision(&tank) {
+			t.posX = t.prevPosX
+			t.posY = t.prevPosY
+			t.rotation = t.prevRotation
 		}
+	}
+	tRotatedX, tRotatedY, tWidth, tHeight  := getRotatedCoords(t)
+	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f", tRotatedX, tRotatedY, tWidth, tHeight)
+	if tRotatedX <= minXCoordinate {
+		t.posX = t.prevPosX
+	}
+	if tRotatedX >= maxXCoordinate - tWidth {
+		t.posX = t.prevPosX
+	}
+	if tRotatedY <= minYCoordinate {
+		t.posY = t.prevPosY
+	}
+	if tRotatedY >= maxYCoordinate - tHeight {
+		t.posY = t.prevPosY
 	}
 }
