@@ -167,7 +167,44 @@ func checkRectCollision(aRotation, aX, aY, aWidth, aHeight, bX, bY, bWidth, bHei
 	return false
 }
 
+func checkAxisCollision(aRotation, aX, aY, aWidth, aHeight, bX, bY, bWidth, bHeight float64) bool {
+	switch math.Round(aRotation) {
+	case 0:
+		if (aY >= bY) {
+			if ((aX + aWidth) >= bX) && ((aX + aWidth) <= (bX + bWidth)) || (aX >= bX) && (aX <= (bX + bWidth)) {
+				return  true
+			}
+		}
+	case math.Round(3*math.Pi / 2):
+		if (aX + aWidth) >= bX {
+			if ((aY + aHeight) >= bY) && ((aY + aHeight) <= (bY + bHeight)) || (aY >= bY) && (aY <= (bY + bHeight)) {
+				return  true
+			}
+		}
+	case math.Round(math.Pi/2):
+		if aX <= (bX + bWidth) {
+			if ((aY + aHeight) >= bY) && ((aY + aHeight) <= (bY + bHeight)) || (aY >= bY) && (aY <= (bY + bHeight)) {
+				return  true
+			}
+		}
+	default:
+		if (aY <= bY) {
+			if ((aX + aWidth) >= bX) && ((aX + aWidth) <= (bX + bWidth)) || (aX >= bX) && (aX <= (bX + bWidth)) {
+				return  true
+			}
+		}
+	}
+	return false
+}
+
 func UpdateCollisions(t *Tank, g *Game) {
+	if t != &g.player {
+		if t.checkBlockCollision(&g.player) {
+			t.posX = t.prevPosX
+			t.posY = t.prevPosY
+			t.rotation = t.prevRotation
+		}
+	}
 	for _, block := range g.blocks {
 		if t.checkBlockCollision(&block) {
 			t.posX = t.prevPosX

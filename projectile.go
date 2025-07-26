@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+
 	//"log"
 	"math"
 
@@ -70,11 +71,10 @@ func addProjectile(t *Tank, g *Game) {
 	deltaX := posOffsetX * math.Abs(math.Cos(t.rotation)) + posOffsetX * math.Abs(math.Sin(t.rotation))
 	deltaY := posOffsetY * math.Abs(math.Cos(t.rotation)) + posOffsetY * math.Abs(math.Sin(t.rotation))
 	if t.rotation == 0 || t.rotation == math.Pi {
-		deltaY -= posOffsetY * (1 / math.Cos(t.rotation))
+		deltaY -= posOffsetY * (1 / math.Cos(t.rotation)) + 1
 	} else {
 		deltaX += 2 * posOffsetX * math.Sin(t.rotation)
 	}
-
 	g.projectiles = append(g.projectiles, Projectile{
 		width: float64(g.resources.projectileImage.Bounds().Dx()),
 		height: float64(g.resources.projectileImage.Bounds().Dy()),
@@ -105,6 +105,9 @@ func checkProjectileCollision(p *Projectile, g *Game) bool {
 		if p.checkBlockCollision(&e) {
 			return  true
 		}
+	}
+	if p.checkBlockCollision(&g.player) {
+		return  true
 	}
 	if p.posX <= minXCoordinate || p.posY <= minYCoordinate || p.posX >= maxXCoordinate || p.posY >= maxYCoordinate {
 		return  true
