@@ -45,6 +45,8 @@ type Block struct {
 	width, height float64
 	rotation float64
 	image *ebiten.Image
+	isDestroyable bool
+	isShot bool
 }
 
 type Resource struct {
@@ -75,6 +77,7 @@ type Tank struct {
 	fireRollbackOffset int
 	isMoving bool
 	isMovable bool
+	isShot bool
 }
 
 

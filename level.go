@@ -47,6 +47,24 @@ func DrawLevel(g *Game, screen *ebiten.Image) {
 	}
 }
 
+func UpdateLevel(g *Game) {
+	blocksToRemove := map[int]int{}
+	for i, block := range g.blocks {
+		if block.isDestroyable && block.isShot {
+			blocksToRemove[i] = 1
+		}
+	}
+	if len(blocksToRemove) > 0 {
+		var newBlocks []Block
+		for i := 0; i < len(g.blocks); i++ {
+			if _, ok := blocksToRemove[i]; !ok {
+				newBlocks = append(newBlocks, g.blocks[i])
+			}
+		}
+		g.blocks = newBlocks
+	}
+}
+
 func initLevel(g *Game) {
 	for k, v := range levelObjects {
 		for i, elem := range v {
@@ -59,6 +77,8 @@ func initLevel(g *Game) {
 					width: float64(g.resources.blockImage.Bounds().Dx()),
 					height: float64(g.resources.blockImage.Bounds().Dy()),
 					image: g.resources.blockImage,
+					isDestroyable: true,
+					isShot: false,
 				})
 			case 2:
 				g.blocks = append(g.blocks, Block{
@@ -68,6 +88,8 @@ func initLevel(g *Game) {
 					width: float64(g.resources.containerImage.Bounds().Dx()),
 					height: float64(g.resources.containerImage.Bounds().Dy()),
 					image: g.resources.containerImage,
+					isDestroyable: false,
+					isShot: false,
 				})
 			case 3:
 				g.blocks = append(g.blocks, Block{
@@ -93,6 +115,7 @@ func initLevel(g *Game) {
 					fireRollbackOffset: 2,
 					isMoving: false,
 					isMovable: true,
+					isShot: false,
 				})
 			}
 		}

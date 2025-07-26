@@ -23,6 +23,7 @@ func (g *Game) Update() error {
 	UpdateEnemies(g)
 	UpdatePlayer(g)
 	UpdateProjectiles(g)
+	UpdateLevel(g)
 
 	return nil
 }
@@ -54,7 +55,7 @@ func main() {
 		turretImage: game.resources.playerTurretImage,
 		tracksImage: game.resources.playerTracksImage,
 		fireRollbackOffset: 2,
-		isMoving: false,}
+		isMoving: false, isShot: false,}
 	ebiten.SetWindowSize(WindowWidth, WindowHeight)
 	ebiten.SetWindowTitle("Hello, Gamer!")
 	if err := ebiten.RunGame(game); err != nil {

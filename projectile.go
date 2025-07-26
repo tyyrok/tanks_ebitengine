@@ -71,7 +71,7 @@ func addProjectile(t *Tank, g *Game) {
 	deltaX := posOffsetX * math.Abs(math.Cos(t.rotation)) + posOffsetX * math.Abs(math.Sin(t.rotation))
 	deltaY := posOffsetY * math.Abs(math.Cos(t.rotation)) + posOffsetY * math.Abs(math.Sin(t.rotation))
 	if t.rotation == 0 || t.rotation == math.Pi {
-		deltaY -= posOffsetY * (1 / math.Cos(t.rotation)) + 1
+		deltaY -= posOffsetY * (1 / math.Cos(t.rotation)) + 2
 	} else {
 		deltaX += 2 * posOffsetX * math.Sin(t.rotation)
 	}
@@ -96,17 +96,22 @@ func addProjectile(t *Tank, g *Game) {
 }
 
 func checkProjectileCollision(p *Projectile, g *Game) bool {
-	for _, block := range g.blocks {
+	for i, block := range g.blocks {
 		if p.checkBlockCollision(&block) {
+			if block.isDestroyable {
+				g.blocks[i].isShot = true
+			}
 			return true
 		}
 	}
-	for _, e := range g.tanks {
+	for i, e := range g.tanks {
 		if p.checkBlockCollision(&e) {
+			g.tanks[i].isShot = true
 			return  true
 		}
 	}
 	if p.checkBlockCollision(&g.player) {
+		g.player.isShot = true
 		return  true
 	}
 	if p.posX <= minXCoordinate || p.posY <= minYCoordinate || p.posX >= maxXCoordinate || p.posY >= maxYCoordinate {
