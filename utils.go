@@ -61,6 +61,42 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	r.enemy2HullImage, _, err = ebitenutil.NewImageFromFile("resources/Hull_08.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy2TracksImage, _, err = ebitenutil.NewImageFromFile("resources/tracks.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy2TurretImage, _, err = ebitenutil.NewImageFromFile("resources/Gun_04.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy3HullImage, _, err = ebitenutil.NewImageFromFile("resources/Hull_02.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy3TracksImage, _, err = ebitenutil.NewImageFromFile("resources/tracks.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy3TurretImage, _, err = ebitenutil.NewImageFromFile("resources/Gun_01.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy4HullImage, _, err = ebitenutil.NewImageFromFile("resources/Hull_05.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy4TracksImage, _, err = ebitenutil.NewImageFromFile("resources/tracks.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.enemy4TurretImage, _, err = ebitenutil.NewImageFromFile("resources/Gun_06.png")
+	if err != nil {
+		log.Fatal(err)
+	}
 	r.tankExplImage, _, err = ebitenutil.NewImageFromFile("resources/Explosion_A_01.png")
 	if err != nil {
 		log.Fatal(err)

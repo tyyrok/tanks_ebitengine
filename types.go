@@ -40,6 +40,8 @@ type Game struct{
 	resources Resource
 	enemyKilledCount int
 	spawnPlaces [][]int
+	nextEnemyType int
+	isWon bool
 }
 
 type Block struct {
@@ -63,8 +65,17 @@ type Resource struct {
 	enemy1HullImage *ebiten.Image
 	enemy1TracksImage *ebiten.Image
 	enemy1TurretImage *ebiten.Image
+	enemy2HullImage *ebiten.Image
+	enemy2TracksImage *ebiten.Image
+	enemy2TurretImage *ebiten.Image
+	enemy3HullImage *ebiten.Image
+	enemy3TracksImage *ebiten.Image
+	enemy3TurretImage *ebiten.Image
+	enemy4HullImage *ebiten.Image
+	enemy4TracksImage *ebiten.Image
+	enemy4TurretImage *ebiten.Image
 	tankExplImage *ebiten.Image
-	
+
 }
 
 type Tank struct {
@@ -82,11 +93,13 @@ type Tank struct {
 	isMoving bool
 	isMovable bool
 	isShot bool
+	isDoubleFire bool
 	isActive bool
 	explosionImage *ebiten.Image
 	explosionNumSprites int
 	explosionFrame int
 	explosionSpeed int // lower is faster
+	enemyType int
 }
 
 

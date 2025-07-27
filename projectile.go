@@ -2,11 +2,14 @@ package main
 
 import (
 	"image"
-
-	//"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
+)
+
+const (
+	projectileScale = 0.3
+	doubleProjectileOffset = 2
 )
 
 func DrawProjectiles(g *Game, screen *ebiten.Image) {
@@ -61,33 +64,95 @@ func UpdateProjectiles(g *Game) {
 }
 
 func addProjectile(t *Tank, g *Game) {
-	// Calculate offset for spawning a projectile
-	posOffsetX := float64(t.hullImage.Bounds().Dx()) / 2
-	posOffsetY := float64(t.hullImage.Bounds().Dy()) / 2
-	deltaX := posOffsetX * math.Abs(math.Cos(t.rotation)) + posOffsetX * math.Abs(math.Sin(t.rotation))
-	deltaY := posOffsetY * math.Abs(math.Cos(t.rotation)) + posOffsetY * math.Abs(math.Sin(t.rotation))
-	if t.rotation == 0 || t.rotation == math.Pi {
-		deltaY -= posOffsetY * (1 / math.Cos(t.rotation)) + 2
+	if t.isDoubleFire {
+		var delta1X, delta1Y, delta2X, delta2Y float64
+		posOffsetX := float64(t.hullImage.Bounds().Dx()) / 2
+		posOffsetY := float64(t.hullImage.Bounds().Dy()) / 2
+		deltaX := posOffsetX * math.Abs(math.Cos(t.rotation)) + posOffsetX * math.Abs(math.Sin(t.rotation))
+		deltaY := posOffsetY * math.Abs(math.Cos(t.rotation)) + posOffsetY * math.Abs(math.Sin(t.rotation))
+		if t.rotation == 0 {
+			delta1Y = deltaY - posOffsetY * (1 / math.Cos(t.rotation)) - doubleProjectileOffset
+			delta1X = deltaX - float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+			delta2Y = deltaY - posOffsetY * (1 / math.Cos(t.rotation)) - doubleProjectileOffset
+			delta2X = deltaX + float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+		} else if math.Round(t.rotation) == math.Round(math.Pi) {
+			delta1Y = deltaY - posOffsetY * (1 / math.Cos(t.rotation)) + doubleProjectileOffset
+			delta1X = deltaX - float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+			delta2Y = deltaY - posOffsetY * (1 / math.Cos(t.rotation)) + doubleProjectileOffset
+			delta2X = deltaX + float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+		} else if math.Round(t.rotation) == math.Round(3*math.Pi/2) {
+			delta1X = deltaX + 2 * posOffsetX * math.Sin(t.rotation) - doubleProjectileOffset
+			delta1Y = deltaY - float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+			delta2X = deltaX + 2 * posOffsetX * math.Sin(t.rotation) - doubleProjectileOffset
+			delta2Y = deltaY + float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+		} else {
+			delta1X = deltaX + 2 * posOffsetX * math.Sin(t.rotation) + doubleProjectileOffset
+			delta1Y = deltaY - float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+			delta2X = deltaX + 2 * posOffsetX * math.Sin(t.rotation) + doubleProjectileOffset
+			delta2Y = deltaY + float64(g.resources.projectileImage.Bounds().Dx()) * projectileScale / 2
+		}
+		g.projectiles = append(g.projectiles, Projectile{
+			width: float64(g.resources.projectileImage.Bounds().Dx()),
+			height: float64(g.resources.projectileImage.Bounds().Dy()),
+			rotation: t.rotation,
+			moveSpeed: t.moveSpeed + 1,
+			posX: t.posX + delta1X,
+			posY: t.posY + delta1Y,
+			explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
+			explosionNumSprites: 8,
+			explosionFrame: 0,
+			explosionSpeed: 3,
+			scale: projectileScale,
+			isCollided: false,
+			isActive: true,
+			image: g.resources.projectileImage,
+			explosion1: g.resources.projectileExplImage,
+		}, Projectile{
+			width: float64(g.resources.projectileImage.Bounds().Dx()),
+			height: float64(g.resources.projectileImage.Bounds().Dy()),
+			rotation: t.rotation,
+			moveSpeed: t.moveSpeed + 1,
+			posX: t.posX + delta2X,
+			posY: t.posY + delta2Y,
+			explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
+			explosionNumSprites: 8,
+			explosionFrame: 0,
+			explosionSpeed: 3,
+			scale: projectileScale,
+			isCollided: false,
+			isActive: true,
+			image: g.resources.projectileImage,
+			explosion1: g.resources.projectileExplImage,
+		})
 	} else {
-		deltaX += 2 * posOffsetX * math.Sin(t.rotation)
+		posOffsetX := float64(t.hullImage.Bounds().Dx()) / 2
+		posOffsetY := float64(t.hullImage.Bounds().Dy()) / 2
+		deltaX := posOffsetX * math.Abs(math.Cos(t.rotation)) + posOffsetX * math.Abs(math.Sin(t.rotation))
+		deltaY := posOffsetY * math.Abs(math.Cos(t.rotation)) + posOffsetY * math.Abs(math.Sin(t.rotation))
+		if t.rotation == 0 || t.rotation == math.Pi {
+			deltaY -= posOffsetY * (1 / math.Cos(t.rotation)) + 2
+		} else {
+			deltaX += 2 * posOffsetX * math.Sin(t.rotation)
+		}
+		g.projectiles = append(g.projectiles, Projectile{
+			width: float64(g.resources.projectileImage.Bounds().Dx()),
+			height: float64(g.resources.projectileImage.Bounds().Dy()),
+			rotation: t.rotation,
+			moveSpeed: t.moveSpeed + 1,
+			posX: t.posX + deltaX,
+			posY: t.posY + deltaY,
+			explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
+			explosionNumSprites: 8,
+			explosionFrame: 0,
+			explosionSpeed: 3,
+			scale: projectileScale,
+			isCollided: false,
+			isActive: true,
+			image: g.resources.projectileImage,
+			explosion1: g.resources.projectileExplImage,
+		})
 	}
-	g.projectiles = append(g.projectiles, Projectile{
-		width: float64(g.resources.projectileImage.Bounds().Dx()),
-		height: float64(g.resources.projectileImage.Bounds().Dy()),
-		rotation: t.rotation,
-		moveSpeed: t.moveSpeed + 1,
-		posX: t.posX + deltaX,
-		posY: t.posY + deltaY,
-		explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
-		explosionNumSprites: 8,
-		explosionFrame: 0,
-		explosionSpeed: 3,
-		scale: 0.3,
-		isCollided: false,
-		isActive: true,
-		image: g.resources.projectileImage,
-		explosion1: g.resources.projectileExplImage,
-	})
+
 	t.lastShot = g.count
 }
 

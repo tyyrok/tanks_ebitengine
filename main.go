@@ -17,11 +17,21 @@ const (
 	maxYCoordinate = 300
 	startPosX = 134
 	startPosY = 260
+	EnemyChangeTreshhold = 2
 )
+
+var GameKillsTreshhold = EnemyChangeTreshhold*4
 
 
 func (g *Game) Update() error {
 	g.count++
+	if g.isWon {
+		UpdatePlayer(g)
+		UpdateLevel(g)
+		if ebiten.IsKeyPressed(ebiten.KeyEnter) {
+			resetGame(g)
+		}
+	}
 	if !g.player.isShot {
 		UpdateEnemies(g)
 		UpdateProjectiles(g)
@@ -40,7 +50,10 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	if !g.player.isActive {
+	if g.isWon {
+		DrawLevel(g, screen)
+		DrawGameWonScreen(screen)
+	} else if !g.player.isActive {
 		DrawLevel(g, screen)
 		DrawEnemies(g, screen)
 		DrawGameOverScreen(screen)
@@ -56,6 +69,15 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 	return ScreenWidth, ScreenHeight
 }
 
+func main() {
+	game := initGame()
+	ebiten.SetWindowSize(WindowWidth, WindowHeight)
+	ebiten.SetWindowTitle("Hello, Gamer!")
+	if err := ebiten.RunGame(game); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func resetGame(g *Game) {
 	g.player.isShot = false
 	g.player.isActive = true
@@ -65,12 +87,18 @@ func resetGame(g *Game) {
 	g.player.prevPosY = startPosY
 	g.player.rotation = 0
 	g.player.explosionFrame = 0
-	initLevel(g)
 	g.projectiles = []Projectile{}
+	g.enemyKilledCount = 0
+	g.nextEnemyType = 0
+	g.isWon = false
+	initLevel(g)
 }
 
-func main() {
-	game := &Game{enemyKilledCount: 0}
+func initGame() *Game {
+	game := &Game{
+		enemyKilledCount: 0,
+		nextEnemyType: 3,
+		isWon: false,}
 	loadResources(game)
 	initLevel(game)
 	game.player = Tank{
@@ -90,9 +118,5 @@ func main() {
 		explosionFrame: 0,
 		explosionSpeed: 3,
 		explosionImage: game.resources.tankExplImage,}
-	ebiten.SetWindowSize(WindowWidth, WindowHeight)
-	ebiten.SetWindowTitle("Hello, Gamer!")
-	if err := ebiten.RunGame(game); err != nil {
-		log.Fatal(err)
-	}
+	return game
 }

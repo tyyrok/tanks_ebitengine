@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math"
-	"math/rand/v2"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -12,6 +11,8 @@ import (
 const (
 	LevelCellOffsetX = 30
 	LevelCellOffsetY = 30
+	enemyReloadSpeed1 = 60
+	enemyReloadSpeed2 = 30
 )
 
 
@@ -112,36 +113,4 @@ func initLevel(g *Game) {
 			}
 		}
 	}
-}
-
-func spawnEnemy(x, y int, g *Game) {
-	newEnemy := Tank{
-		width: float64(g.resources.playerHullImage.Bounds().Dx()),
-		height: float64(g.resources.playerHullImage.Bounds().Dy()),
-		posX: float64(x*LevelCellOffsetX), posY: float64(y*LevelCellOffsetY),
-		prevPosX: float64(x*LevelCellOffsetX), prevPosY: float64(y*LevelCellOffsetY),
-		rotation: math.Pi, moveSpeed: 1,
-		reloadSpeed: 60, lastShot: 0,
-		scale: 1,
-		hullImage: g.resources.enemy1HullImage,
-		turretImage: g.resources.enemy1TurretImage,
-		tracksImage: g.resources.playerTracksImage,
-		fireRollbackOffset: 2,
-		isMoving: false,
-		isMovable: true,
-		isShot: false,
-		isActive: true,
-		explosionNumSprites: 5,
-		explosionFrame: 0,
-		explosionSpeed: 3,
-		explosionImage: g.resources.tankExplImage,
-	}
-	if !CheckCollisions(&newEnemy, g) {
-		g.tanks = append(g.tanks, newEnemy)
-	}
-}
-
-func spawnEnemyOnRandomSpawnPlace(g *Game) {
-	randomPlace := g.spawnPlaces[rand.IntN(len(g.spawnPlaces))]
-	spawnEnemy(randomPlace[0], randomPlace[1], g)
 }
