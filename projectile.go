@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"image"
 
 	//"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 func DrawProjectiles(g *Game, screen *ebiten.Image) {
@@ -38,8 +36,6 @@ func DrawProjectiles(g *Game, screen *ebiten.Image) {
 			op.GeoM.Translate(shot.posX, shot.posY)
 			screen.DrawImage(shot.image, op)
 		}
-		msg := fmt.Sprintf("\n\n\n\n\nprojectiles: %d", len(g.projectiles))
-		ebitenutil.DebugPrint(screen, msg)
 	}
 }
 

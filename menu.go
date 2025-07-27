@@ -26,7 +26,7 @@ func DrawGameOverScreen(screen *ebiten.Image) {
 		Size:   normalFontSize,
 	}, op)
 
-	gameOverText = "Press Space to try again"
+	gameOverText = "Press Enter to try again"
 	op = &text.DrawOptions{
 		LayoutOptions: text.LayoutOptions{
 			PrimaryAlign: text.AlignCenter}}

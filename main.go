@@ -15,6 +15,8 @@ const (
 	minYCoordinate = 0
 	maxXCoordinate = 300
 	maxYCoordinate = 300
+	startPosX = 134
+	startPosY = 260
 )
 
 
@@ -29,13 +31,16 @@ func (g *Game) Update() error {
 		UpdateEnemies(g)
 		UpdateProjectiles(g)
 		UpdateLevel(g)
+		if ebiten.IsKeyPressed(ebiten.KeyEnter) {
+			resetGame(g)
+		}
 	}
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	if g.player.isShot {
+	if !g.player.isActive {
 		DrawLevel(g, screen)
 		DrawEnemies(g, screen)
 		DrawGameOverScreen(screen)
@@ -51,6 +56,19 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 	return ScreenWidth, ScreenHeight
 }
 
+func resetGame(g *Game) {
+	g.player.isShot = false
+	g.player.isActive = true
+	g.player.posX = startPosX
+	g.player.posY = startPosY
+	g.player.prevPosX = startPosX
+	g.player.prevPosY = startPosY
+	g.player.rotation = 0
+	g.player.explosionFrame = 0
+	initLevel(g)
+	g.projectiles = []Projectile{}
+}
+
 func main() {
 	game := &Game{enemyKilledCount: 0}
 	loadResources(game)
@@ -58,8 +76,8 @@ func main() {
 	game.player = Tank{
 		width: float64(game.resources.playerHullImage.Bounds().Dx()),
 		height: float64(game.resources.playerHullImage.Bounds().Dy()),
-		posX: 134, posY: 260,
-		prevPosX: 134, prevPosY: 260,
+		posX: startPosX, posY: startPosY,
+		prevPosX: startPosX, prevPosY: startPosY,
 		scale: 1,
 		rotation: 0, moveSpeed: 1.2,
 		reloadSpeed: 60, lastShot: 0,

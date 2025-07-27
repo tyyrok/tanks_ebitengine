@@ -70,6 +70,8 @@ func UpdateLevel(g *Game) {
 }
 
 func initLevel(g *Game) {
+	g.blocks = []Block{}
+	g.tanks = []Tank{}
 	for k, v := range levelObjects {
 		for i, elem := range v {
 			switch elem {
