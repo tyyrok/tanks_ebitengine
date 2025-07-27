@@ -64,6 +64,7 @@ type Resource struct {
 	enemy1TracksImage *ebiten.Image
 	enemy1TurretImage *ebiten.Image
 	tankExplImage *ebiten.Image
+	
 }
 
 type Tank struct {

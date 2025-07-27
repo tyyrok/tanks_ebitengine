@@ -1,10 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+)
+
+var (
+	MplusFaceSource *text.GoTextFaceSource
 )
 
 func loadResources(g *Game) {
@@ -55,6 +62,10 @@ func loadResources(g *Game) {
 		log.Fatal(err)
 	}
 	r.tankExplImage, _, err = ebitenutil.NewImageFromFile("resources/Explosion_A_01.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	MplusFaceSource, err = text.NewGoTextFaceSource(bytes.NewReader(fonts.MPlus1pRegular_ttf))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -20,19 +20,31 @@ const (
 
 func (g *Game) Update() error {
 	g.count++
-	UpdateEnemies(g)
-	UpdateProjectiles(g)
-	UpdatePlayer(g)
-	UpdateLevel(g)
+	if !g.player.isShot {
+		UpdateEnemies(g)
+		UpdateProjectiles(g)
+		UpdatePlayer(g)
+		UpdateLevel(g)
+	} else {
+		UpdateEnemies(g)
+		UpdateProjectiles(g)
+		UpdateLevel(g)
+	}
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	DrawLevel(g, screen)
-	DrawEnemies(g, screen)
-	DrawPlayer(g, screen)
-	DrawProjectiles(g, screen)
+	if g.player.isShot {
+		DrawLevel(g, screen)
+		DrawEnemies(g, screen)
+		DrawGameOverScreen(screen)
+	} else {
+		DrawLevel(g, screen)
+		DrawEnemies(g, screen)
+		DrawPlayer(g, screen)
+		DrawProjectiles(g, screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
