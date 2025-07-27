@@ -37,6 +37,9 @@ func UpdateEnemies(g *Game) {
 		updatedTanks = append(updatedTanks, g.tanks[i])
 	}
 	g.tanks = updatedTanks
+	if len(g.tanks) < 2 {
+		spawnEnemyOnRandomSpawnPlace(g)
+	}
 }
 
 func moveEnemy(e *Tank, g *Game) {

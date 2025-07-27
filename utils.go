@@ -241,3 +241,25 @@ func UpdateCollisions(t *Tank, g *Game) {
 		t.posY = t.prevPosY
 	}
 }
+
+func CheckCollisions(t *Tank, g *Game) bool {
+	if t != &g.player {
+		if t.checkBlockCollision(&g.player) {
+			return true
+		}
+	}
+	for _, block := range g.blocks {
+		if t.checkBlockCollision(&block) {
+			return true
+		}
+	}
+	for i, tank := range g.tanks {
+		if &g.tanks[i] == t {
+			continue
+		}
+		if t.checkBlockCollision(&tank) {
+			return  true
+		}
+	}
+	return false
+}

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"math/rand/v2"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -16,12 +17,12 @@ const (
 
 var levelObjects = map[int][]uint16{
 	0:{0, 0, 0, 0, 0, 0, 0, 0, 4, 0},
-	1:{2, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+	1:{1, 0, 0, 0, 0, 0, 1, 0, 0, 0},
 	2:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	3:{0, 4, 0, 1, 0, 0, 0, 0, 1, 0},
 	4:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	5:{0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-	6:{0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+	6:{0, 0, 0, 2, 0, 0, 0, 0, 0, 0},
 	7:{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	8:{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	9:{0, 0, 0, 3, 0, 3, 0, 0, 0, 0},
@@ -104,28 +105,41 @@ func initLevel(g *Game) {
 					image: g.resources.containerImage,
 				})
 			case 4:
-				g.tanks = append(g.tanks, Tank{
-					width: float64(g.resources.playerHullImage.Bounds().Dx()),
-					height: float64(g.resources.playerHullImage.Bounds().Dy()),
-					posX: float64(i*LevelCellOffsetX), posY: float64(k*LevelCellOffsetY),
-					prevPosX: float64(i*LevelCellOffsetX), prevPosY: float64(k*LevelCellOffsetY),
-					rotation: math.Pi, moveSpeed: 1,
-					reloadSpeed: 60, lastShot: 0,
-					scale: 1,
-					hullImage: g.resources.enemy1HullImage,
-					turretImage: g.resources.enemy1TurretImage,
-					tracksImage: g.resources.playerTracksImage,
-					fireRollbackOffset: 2,
-					isMoving: false,
-					isMovable: true,
-					isShot: false,
-					isActive: true,
-					explosionNumSprites: 5,
-					explosionFrame: 0,
-					explosionSpeed: 3,
-					explosionImage: g.resources.tankExplImage,
-				})
+				spawnEnemy(i, k, g)
+				g.spawnPlaces = append(g.spawnPlaces, []int{i,k})
 			}
 		}
 	}
+}
+
+func spawnEnemy(x, y int, g *Game) {
+	newEnemy := Tank{
+		width: float64(g.resources.playerHullImage.Bounds().Dx()),
+		height: float64(g.resources.playerHullImage.Bounds().Dy()),
+		posX: float64(x*LevelCellOffsetX), posY: float64(y*LevelCellOffsetY),
+		prevPosX: float64(x*LevelCellOffsetX), prevPosY: float64(y*LevelCellOffsetY),
+		rotation: math.Pi, moveSpeed: 1,
+		reloadSpeed: 60, lastShot: 0,
+		scale: 1,
+		hullImage: g.resources.enemy1HullImage,
+		turretImage: g.resources.enemy1TurretImage,
+		tracksImage: g.resources.playerTracksImage,
+		fireRollbackOffset: 2,
+		isMoving: false,
+		isMovable: true,
+		isShot: false,
+		isActive: true,
+		explosionNumSprites: 5,
+		explosionFrame: 0,
+		explosionSpeed: 3,
+		explosionImage: g.resources.tankExplImage,
+	}
+	if !CheckCollisions(&newEnemy, g) {
+		g.tanks = append(g.tanks, newEnemy)
+	}
+}
+
+func spawnEnemyOnRandomSpawnPlace(g *Game) {
+	randomPlace := g.spawnPlaces[rand.IntN(len(g.spawnPlaces))]
+	spawnEnemy(randomPlace[0], randomPlace[1], g)
 }

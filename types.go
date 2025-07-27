@@ -39,6 +39,7 @@ type Game struct{
 	blocks []Block
 	resources Resource
 	enemyKilledCount int
+	spawnPlaces [][]int
 }
 
 type Block struct {
