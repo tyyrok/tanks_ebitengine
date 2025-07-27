@@ -18,6 +18,7 @@ func UpdateEnemies(g *Game) {
 	updatedTanks := []Tank{}
 	for i, e := range g.tanks {
 		if !e.isActive {
+			g.enemyKilledCount += 1
 			continue
 		}
 		if !e.isShot {

@@ -40,7 +40,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	game := &Game{}
+	game := &Game{enemyKilledCount: 0}
 	loadResources(game)
 	initLevel(game)
 	game.player = Tank{

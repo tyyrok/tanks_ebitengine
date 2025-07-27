@@ -38,6 +38,7 @@ type Game struct{
 	projectiles []Projectile
 	blocks []Block
 	resources Resource
+	enemyKilledCount int
 }
 
 type Block struct {
