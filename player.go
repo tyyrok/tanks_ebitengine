@@ -18,6 +18,24 @@ func DrawPlayer(g *Game, screen *ebiten.Image) {
 }
 
 func DrawTank(p *Tank, screen *ebiten.Image, count int) {
+	if !p.isActive {
+		return
+	}
+	if p.isShot {
+		op := &ebiten.DrawImageOptions{}
+		offsetX, offsetY := p.getExplositionOffset()
+		op.GeoM.Translate(offsetX, offsetY)
+		sx, sy := p.explosionFrame * int(p.explosionImage.Bounds().Dy()), 0
+		screen.DrawImage(p.explosionImage.SubImage(image.Rect(sx, sy, sx+int(p.explosionImage.Bounds().Dy()), sy+int(p.explosionImage.Bounds().Dy()))).(*ebiten.Image), op)
+		if p.explosionFrame == p.explosionNumSprites - 1 {
+			p.isActive = false
+			return
+		}
+		if count % p.explosionSpeed == 0 {
+			p.explosionFrame += 1
+		}
+		return
+	}
 	// Calculate base transformation
 	baseOffsetX := float64(p.hullImage.Bounds().Dx()) / 2
 	baseOffsetY := float64(p.hullImage.Bounds().Dy()) / 2

@@ -9,26 +9,33 @@ import (
 )
 
 func DrawEnemies(g *Game, screen *ebiten.Image) {
-	for _, e := range g.tanks {
-		DrawTank(&e, screen, g.count)
+	for i := 0; i < len(g.tanks); i++ {
+		DrawTank(&g.tanks[i], screen, g.count)
 	}
 }
 
 func UpdateEnemies(g *Game) {
+	updatedTanks := []Tank{}
 	for i, e := range g.tanks {
-		g.tanks[i].isMoving = false
-		checkPlayer(&g.tanks[i], g)
-		if e.isMovable {
-			switch rand.IntN(4) {
-			case 0, 1:
-				moveEnemy(&g.tanks[i], g)
-			case 2:
-				rotateEnemy(&g.tanks[i], g)
-			case 3:
-				continue
+		if !e.isActive {
+			continue
+		}
+		if !e.isShot {
+			g.tanks[i].isMoving = false
+			checkPlayer(&g.tanks[i], g)
+			if e.isMovable {
+				switch rand.IntN(4) {
+				case 0, 1:
+					moveEnemy(&g.tanks[i], g)
+				case 2:
+					rotateEnemy(&g.tanks[i], g)
+				case 3:
+				}
 			}
 		}
+		updatedTanks = append(updatedTanks, g.tanks[i])
 	}
+	g.tanks = updatedTanks
 }
 
 func moveEnemy(e *Tank, g *Game) {

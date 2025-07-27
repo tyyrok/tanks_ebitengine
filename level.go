@@ -116,6 +116,11 @@ func initLevel(g *Game) {
 					isMoving: false,
 					isMovable: true,
 					isShot: false,
+					isActive: true,
+					explosionNumSprites: 5,
+					explosionFrame: 0,
+					explosionSpeed: 3,
+					explosionImage: g.resources.tankExplImage,
 				})
 			}
 		}

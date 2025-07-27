@@ -85,12 +85,12 @@ func addProjectile(t *Tank, g *Game) {
 		explosion1SpriteWidth: 50, explosion1SpriteHeight: 50,
 		explosionNumSprites: 8,
 		explosionFrame: 0,
+		explosionSpeed: 3,
 		scale: 0.3,
 		isCollided: false,
 		isActive: true,
 		image: g.resources.projectileImage,
 		explosion1: g.resources.projectileExplImage,
-		explosionSpeed: 3,
 	})
 	t.lastShot = g.count
 }

@@ -61,6 +61,7 @@ type Resource struct {
 	enemy1HullImage *ebiten.Image
 	enemy1TracksImage *ebiten.Image
 	enemy1TurretImage *ebiten.Image
+	tankExplImage *ebiten.Image
 }
 
 type Tank struct {
@@ -78,6 +79,11 @@ type Tank struct {
 	isMoving bool
 	isMovable bool
 	isShot bool
+	isActive bool
+	explosionImage *ebiten.Image
+	explosionNumSprites int
+	explosionFrame int
+	explosionSpeed int // lower is faster
 }
 
 
@@ -95,6 +101,11 @@ func (t *Tank) checkBlockCollision(b Rect) bool {
 	//return checkRectCollision(tRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight)
 	return checkRectCollision(t.rotation, tRotatedX, tRotatedY, tWidth, tHeight, bRotatedX, bRotatedY, bWidth, bHeight)
 	//log.Printf("tX: %0f, tY: %0f, tW: %0f, tH: %0f, bX: %0f, bY: %0f", tRotatedX, tRotatedY, tWidth, tHeight, b.posX, b.posY)
+}
+
+func (t *Tank) getExplositionOffset() (float64, float64) {
+	tRotatedX, tRotatedY, tWidth, tHeight := getRotatedCoords(t)
+	return tRotatedX + tWidth / 2 - float64(t.explosionImage.Bounds().Dy()) / 2, tRotatedY + tHeight / 2 - float64(t.explosionImage.Bounds().Dy()) / 2
 }
 
 func (p *Projectile) getCoordinates() (float64, float64, float64, float64, float64) {

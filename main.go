@@ -21,8 +21,8 @@ const (
 func (g *Game) Update() error {
 	g.count++
 	UpdateEnemies(g)
-	UpdatePlayer(g)
 	UpdateProjectiles(g)
+	UpdatePlayer(g)
 	UpdateLevel(g)
 
 	return nil
@@ -55,7 +55,11 @@ func main() {
 		turretImage: game.resources.playerTurretImage,
 		tracksImage: game.resources.playerTracksImage,
 		fireRollbackOffset: 2,
-		isMoving: false, isShot: false,}
+		isMoving: false, isShot: false, isActive: true,
+		explosionNumSprites: 5,
+		explosionFrame: 0,
+		explosionSpeed: 3,
+		explosionImage: game.resources.tankExplImage,}
 	ebiten.SetWindowSize(WindowWidth, WindowHeight)
 	ebiten.SetWindowTitle("Hello, Gamer!")
 	if err := ebiten.RunGame(game); err != nil {

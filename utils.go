@@ -54,6 +54,10 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	r.tankExplImage, _, err = ebitenutil.NewImageFromFile("resources/Explosion_A_01.png")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	g.resources = r
 }
