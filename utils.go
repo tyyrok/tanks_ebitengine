@@ -101,7 +101,11 @@ func loadResources(g *Game) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	MplusFaceSource, err = text.NewGoTextFaceSource(bytes.NewReader(fonts.MPlus1pRegular_ttf))
+	r.menuImage, _, err = ebitenutil.NewImageFromFile("resources/menu.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	MplusFaceSource, err = text.NewGoTextFaceSource(bytes.NewReader(fonts.PressStart2P_ttf))
 	if err != nil {
 		log.Fatal(err)
 	}

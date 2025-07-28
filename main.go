@@ -25,6 +25,11 @@ var GameKillsTreshhold = EnemyChangeTreshhold*4
 
 func (g *Game) Update() error {
 	g.count++
+	if !g.isStarted {
+		if ebiten.IsKeyPressed(ebiten.KeyEnter) {
+			g.isStarted = true
+		}
+	}
 	if g.isWon {
 		UpdatePlayer(g)
 		UpdateLevel(g)
@@ -50,7 +55,9 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	if g.isWon {
+	if !g.isStarted {
+		DrawGameStartScreen(screen, g)
+	} else if g.isWon {
 		DrawLevel(g, screen)
 		DrawGameWonScreen(screen)
 	} else if !g.player.isActive {
@@ -97,8 +104,9 @@ func resetGame(g *Game) {
 func initGame() *Game {
 	game := &Game{
 		enemyKilledCount: 0,
-		nextEnemyType: 3,
-		isWon: false,}
+		nextEnemyType: 0,
+		isWon: false,
+		isStarted: false,}
 	loadResources(game)
 	initLevel(game)
 	game.player = Tank{

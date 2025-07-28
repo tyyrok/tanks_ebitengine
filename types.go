@@ -42,6 +42,7 @@ type Game struct{
 	spawnPlaces [][]int
 	nextEnemyType int
 	isWon bool
+	isStarted bool
 }
 
 type Block struct {
@@ -75,7 +76,7 @@ type Resource struct {
 	enemy4TracksImage *ebiten.Image
 	enemy4TurretImage *ebiten.Image
 	tankExplImage *ebiten.Image
-
+	menuImage *ebiten.Image
 }
 
 type Tank struct {
