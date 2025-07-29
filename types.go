@@ -80,7 +80,6 @@ type Resource struct {
 	enemy4TurretImage *ebiten.Image
 	tankExplImage *ebiten.Image
 	menuImage *ebiten.Image
-	audioFile []byte
 }
 
 type Tank struct {

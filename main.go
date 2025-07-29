@@ -1,13 +1,17 @@
 package main
 
 import (
+	_ "embed"
 	"bytes"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
-	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
+	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 )
+
+//go:embed resources/melody.ogg
+var melody []byte
 
 const (
 	ScreenWidth = 300
@@ -144,7 +148,7 @@ func handleAudio(g *Game) {
 	if g.audioContext == nil {
 		g.audioContext = audio.NewContext(sampleRate)
 	}
-	s, err := mp3.DecodeF32(bytes.NewReader(g.resources.audioFile))
+	s, err := vorbis.DecodeF32(bytes.NewReader(melody))
 	if err != nil {
 		log.Fatal(err)
 	}

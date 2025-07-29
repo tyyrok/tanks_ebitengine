@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"log"
 	"math"
-	"os"
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
@@ -103,10 +102,6 @@ func loadResources(g *Game) {
 		log.Fatal(err)
 	}
 	r.menuImage, _, err = ebitenutil.NewImageFromFile("resources/menu.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	r.audioFile, err = os.ReadFile("resources/8bit-music-for-game-68698.mp3")
 	if err != nil {
 		log.Fatal(err)
 	}
