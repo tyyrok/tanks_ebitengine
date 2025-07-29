@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 )
 
 const (
@@ -18,6 +21,10 @@ const (
 	startPosX = 134
 	startPosY = 260
 	EnemyChangeTreshhold = 2
+	sampleRate     = 48000
+	bytesPerSample = 8 // 2 channels * 4 bytes (32 bit float)
+
+	loopLengthInSecond  = 10
 )
 
 var GameKillsTreshhold = EnemyChangeTreshhold*4
@@ -50,6 +57,7 @@ func (g *Game) Update() error {
 			resetGame(g)
 		}
 	}
+	handleAudio(g)
 
 	return nil
 }
@@ -127,4 +135,23 @@ func initGame() *Game {
 		explosionSpeed: 3,
 		explosionImage: game.resources.tankExplImage,}
 	return game
+}
+
+func handleAudio(g *Game) {
+	if g.auidioPlayer != nil {
+		return
+	}
+	if g.audioContext == nil {
+		g.audioContext = audio.NewContext(sampleRate)
+	}
+	s, err := mp3.DecodeF32(bytes.NewReader(g.resources.audioFile))
+	if err != nil {
+		log.Fatal(err)
+	}
+	stream := audio.NewInfiniteLoopF32(s, loopLengthInSecond*bytesPerSample*sampleRate)
+	g.auidioPlayer, err = g.audioContext.NewPlayerF32(stream)
+	if err != nil {
+		log.Fatal(err)
+	}
+	g.auidioPlayer.Play()
 }

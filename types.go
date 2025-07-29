@@ -4,6 +4,7 @@ import (
 	"math"
 	//"log"
 
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -43,6 +44,8 @@ type Game struct{
 	nextEnemyType int
 	isWon bool
 	isStarted bool
+	auidioPlayer *audio.Player
+	audioContext *audio.Context
 }
 
 type Block struct {
@@ -77,6 +80,7 @@ type Resource struct {
 	enemy4TurretImage *ebiten.Image
 	tankExplImage *ebiten.Image
 	menuImage *ebiten.Image
+	audioFile []byte
 }
 
 type Tank struct {

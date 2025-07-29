@@ -12,4 +12,4 @@ So basically it's my first attempt with Ebitengine, also it wasn't so easy to fi
 1. Start the game `go run .`
 
 ### Screenshots
-![alt text]()
+![alt text](screenshot.png)
