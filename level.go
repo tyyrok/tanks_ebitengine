@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -48,8 +47,6 @@ func DrawLevel(g *Game, screen *ebiten.Image) {
 		op.GeoM.Translate(block.posX+baseOffsetX, block.posY+baseOffsetY)
 		screen.DrawImage(block.image, op)
 	}
-	msg := fmt.Sprintf("\nKilled: %d", g.enemyKilledCount)
-	ebitenutil.DebugPrint(screen, msg)
 }
 
 func UpdateLevel(g *Game) {

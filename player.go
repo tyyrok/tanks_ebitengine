@@ -13,7 +13,7 @@ import (
 
 func DrawPlayer(g *Game, screen *ebiten.Image) {
 	DrawTank(&g.player, screen, g.count)
-	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), g.player.posX, g.player.posY)
+	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f\nKills: %d", ebiten.ActualFPS(), ebiten.ActualTPS(), g.enemyKilledCount)
 	ebitenutil.DebugPrint(screen, msg)
 }
 
@@ -91,9 +91,6 @@ func DrawTank(p *Tank, screen *ebiten.Image, count int) {
 	turretOp.GeoM.Translate(turretOffsetX, turretOffsetY)
 	screen.DrawImage(p.turretImage, turretOp)
 
-
-	msg := fmt.Sprintf("FPS: %0.2f, TPS: %0.2f, X: %0.2f, Y: %0.2f", ebiten.ActualFPS(), ebiten.ActualTPS(), p.posX, p.posY)
-	ebitenutil.DebugPrint(screen, msg)
 }
 
 
